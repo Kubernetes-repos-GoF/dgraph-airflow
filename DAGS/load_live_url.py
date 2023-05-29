@@ -19,22 +19,14 @@ with DAG(
 ) as dag:
     task1 = BashOperator(
         task_id='first_task',
-        bash_command= "echo hello Angel, this is task 1"
+        bash_command= "echo dag corriendo primera tarea"
     )
 
     task2 = BashOperator(
         task_id = 'second_task',
-        bash_command= "dgraph live --slash_grpc_endpoint <grpc-endpoint> -f <local-path-to-data>/<data-file> -s <local-path-to-data>/<schema-file> -t <api-key>"
+        bash_command= "kubectl get pod -n airflow "
         
-
-    )
-
-    task3 = BashOperator(
-        task_id = 'third_task',
-        
-        bash_command = "curl -H 'Content-Type: application/dql' -X POST http://44.211.75.97:8000/query -d $' { movies(func: has(release_date)) { name,  director { name },    starring { name } \
-     } }'"
     )
 
     task1.set_downstream(task2)
-    task1.set_downstream(task3)
+  
