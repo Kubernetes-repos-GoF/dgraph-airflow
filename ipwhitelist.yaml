@@ -1,0 +1,9 @@
+alpha:
+  persistence:
+    size: 5Gi
+  extraEnvs:
+    - name: DGRAPH_ALPHA_WHITELIST
+      value: 0.0.0.0/0
+zero:
+  persistence:
+    size: 5Gi

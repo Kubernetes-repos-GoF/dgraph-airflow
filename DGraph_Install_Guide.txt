@@ -1,0 +1,193 @@
+DGraph install
+curl https://get.dgraph.io -sSf | sudo bash
+dgraph version
+
+------------------
+k create ns dgraph
+
+helm repo add dgraph https://charts.dgraph.io
+helm install xit-release --values ipwhitelist.yaml dgraph/dgraph -n dgraph
+
+kgpw -n dgraph
+kgp -n dgraph
+
+kgpvc -n dgraph
+
+kgs -n dgraph
+
+-- Find svc with port=8080
+kubectl port-forward service/xit-release-dgraph-alpha 8080:8080 -n dgraph
+
+https://play.dgraph.io/?latest#
+Dgraph Server Connection
+http://localhost:8080
+
+
+kgp -n dgraph
+-- Find zero-0 node and access it
+kubectl exec -it xit-release-dgraph-zero-0 -n dgraph -- sh
+
+--- Load Data
+apt-get update
+apt-get install -y wget file
+
+wget -q -O 1million.schema  "https://github.com/dgraph-io/benchmarks/blob/master/data/1million.schema?raw=true"
+wget -q -O 1million.rdf.gz  "https://github.com/dgraph-io/benchmarks/blob/master/data/1million.rdf.gz?raw=true"
+
+wget -q -O 21million.schema  "https://github.com/dgraph-io/benchmarks/blob/master/data/21million.schema?raw=true"
+wget -q -O 21million.rdf.gz  "https://github.com/dgraph-io/benchmarks/blob/master/data/21million.rdf.gz?raw=true"
+
+
+---BEGIN OPTIONS
+---OPTION 1:
+dgraph bulk -f 1million.rdf.gz -s 1million.schema --map_shards=1 --reduce_shards=1 --http localhost:8000 --zero=localhost:5080
+dgraph bulk -f 21million.rdf.gz -s 21million.schema --map_shards=1 --reduce_shards=1 --http localhost:8000 --zero=localhost:5080
+
+---OPTION 2:
+-- Find dgraph alpha --zero=... Hint: xit-release-dgraph-zero-0.xit-release-dgraph-zero-headless.${POD_NAMESPACE}.svc.cluster.local:5080
+k describe pod xit-release-dgraph-alpha-0 -n dgraph 
+
+dgraph bulk -f 1million.rdf.gz -s 1million.schema --map_shards=1 --reduce_shards=1 --http localhost:8000 --zero=xit-release-dgraph-zero-0.xit-release-dgraph-zero-headless.dgraph.svc.cluster.local:5080
+
+---OPTION 3:
+-- Find IP to zero service
+kgs -n dgraph 
+
+dgraph bulk -f 1million.rdf.gz -s 1million.schema --map_shards=1 --reduce_shards=1 --http localhost:8000 --zero=10.116.9.135:5080
+
+---END OPTIONS
+
+-- Copy files to local
+k cp xit-release-dgraph-zero-0:out/. /home/andres/dgraphout/ -n dgraph
+
+-- Access to Alpha Pods
+keti xit-release-dgraph-alpha-0 -n dgraph -- sh
+keti xit-release-dgraph-alpha-1 -n dgraph -- sh
+keti xit-release-dgraph-alpha-2 -n dgraph -- sh
+
+rm -rf p
+mkdir p
+chmod 700 p
+
+-- Copy files to Alpha Pods
+k cp /home/andres/dgraphout/0/p/. xit-release-dgraph-alpha-0:p/ -n dgraph
+k cp /home/andres/dgraphout/0/p/. xit-release-dgraph-alpha-1:p/ -n dgraph
+k cp /home/andres/dgraphout/0/p/. xit-release-dgraph-alpha-2:p/ -n dgraph
+
+-- Restart server
+kgpw -n dgraph
+k logs -f xit-release-dgraph-alpha-0 -n dgraph
+-- CONN: Re-established connection with xit-release-dgraph-alpha-1.xit-release-dgraph-alpha-headless.dgraph.svc.cluster.local:7080
+
+http://localhost:8080/admin/shutdown
+
+-- Check Schema and Query
+https://play.dgraph.io/?latest#
+
+{
+  movie(func:alloftext(name@de, "Die schwarz"))
+    @filter(has(genre))
+  {
+    name@de
+    name@en
+    name@it
+  }
+}
+
+
+-------------------------------------------------------
+kgp -n dgraph
+-- Find alpha-0 node and access it
+kubectl exec -it xit-release-dgraph-alpha-0 -n dgraph -- sh
+
+--- Load Data
+apt-get update
+apt-get install -y wget file
+
+wget -q -O 1million.schema  "https://github.com/dgraph-io/benchmarks/blob/master/data/1million.schema?raw=true"
+wget -q -O 1million.rdf.gz  "https://github.com/dgraph-io/benchmarks/blob/master/data/1million.rdf.gz?raw=true"
+zcat 1million.rdf.gz | wc -l
+-- 1048079
+
+wget -q -O 21million.schema  "https://github.com/dgraph-io/benchmarks/blob/master/data/21million.schema?raw=true"
+wget -q -O 21million.rdf.gz  "https://github.com/dgraph-io/benchmarks/blob/master/data/21million.rdf.gz?raw=true"
+zcat 21million.rdf.gz | wc -l
+-- 21239870
+zcat 21million.rdf.gz | head -n 16  
+
+dgraph live -f 1million.rdf.gz -s 1million.schema --format=rdf --zero=xit-release-dgraph-zero-0.xit-release-dgraph-zero-headless.dgraph.svc.cluster.local:5080 --alpha=localhost:9080 --logtostderr
+
+dgraph live -f 21million.rdf.gz -s 21million.schema --format=rdf --zero=xit-release-dgraph-zero-0.xit-release-dgraph-zero-headless.dgraph.svc.cluster.local:5080 --alpha=localhost:9080 --logtostderr
+
+-- Check Schema and Query
+https://play.dgraph.io/?latest#
+
+{
+  movie(func:alloftext(name@de, "Die schwarz"))
+    @filter(has(genre))
+  {
+    name@de
+    name@en
+    name@it
+  }
+}
+
+-------------------------------------------
+---- Expose endpoints alpha and zero
+kubectl port-forward service/xit-release-dgraph-alpha 8080:8080 -n dgraph
+kubectl port-forward service/xit-release-dgraph-zero 5080:5080 -n dgraph
+
+-------------------------------------------
+---- Prometheus
+
+-- Guide
+https://github.com/dgraph-io/dgraph/tree/main/contrib/config/monitoring/prometheus/chart-values
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+helm install kube-prometheus-stack --values dgraph_prometheus_v4.yml,dgraph-backup-alert-rules.yml,dgraph-app-alert-rules.yml --set grafana.adminPassword='andysanru' prometheus-community/kube-prometheus-stack --namespace dgraph
+
+-- Prometheus UI
+kgp -n dgraph
+kubectl port-forward prometheus-kube-prometheus-stack-prometheus-0 9090:9090 -n dgraph
+http://localhost:9090
+---- Graph > container_cpu_usage_seconds_total
+
+-- Grafana
+kgs -n dgraph
+kubectl -n dgraph port-forward svc/kube-prometheus-stack-grafana 3000:80
+http://localhost:3000
+--- admin andysanru
+---- Import dgraph-kubernetes-grafana-dashboard.json
+
+-- AlertManager
+kubectl -n dgraph port-forward svc/kube-prometheus-stack-alertmanager 9093:9093
+http://localhost:9093
+
+-------------------------------------------
+
+Monitoring
+
+http://localhost:8080/state
+http://localhost:8080/health?all
+http://localhost:8080/admin/export
+http://localhost:8080/admin
+http://localhost:8080/admin/shutdown
+
+-------------------------------------------
+
+
+
+
+
+
+
+wget -q -O 21million.rdf.gz  "https://github.com/dgraph-io/benchmarks/raw/release/v1.0/data/release/21million.rdf.gz"
+wget -q -O facets.rdf.gz -q  "https://github.com/dgraph-io/benchmarks/raw/release/v1.0/data/release/facets.rdf.gz"
+wget -q -O sf-tourism.rdf.gz "https://github.com/dgraph-io/benchmarks/raw/release/v1.0/data/release/sf-tourism.rdf.gz"
+wget -q -O release.schema    "https://raw.githubusercontent.com/dgraph-io/benchmarks/release/v1.0/data/release/release.schema"
+
+
+---Idea to upgrade
+helm upgrade xit-release --values ipwhitelist.yaml dgraph/dgraph -n dgraph
