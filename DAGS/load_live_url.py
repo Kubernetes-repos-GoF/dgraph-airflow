@@ -11,7 +11,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='dgraph_insert_live_url',
+    dag_id='dgraph_testing_connection',
     default_args = default_args,
     description='this is my first dag',
     start_date=datetime(2023,5,12,2),

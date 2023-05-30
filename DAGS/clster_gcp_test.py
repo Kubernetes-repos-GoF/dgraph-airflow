@@ -11,7 +11,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='dag_cluster_gcp_01',
+    dag_id='query_simpson',
     default_args = default_args,
     description='dag_cluster_gcp',
     start_date=datetime(2023,5,12,2),

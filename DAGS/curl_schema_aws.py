@@ -31,7 +31,7 @@ with DAG(
         task_id = 'third_task',
         # bash_command = "curl -H 'Content-Type:application/json' http://44.211.75.97:8000/admin/schema -X POST -d \
         #     $' type City{ id:ID! , lat:Float! , lgn: Float! }'"
-        bash_command = "curl 'localhost:8080/alter' --silent --request POST \
+        bash_command = "curl 'http://44.211.75.97:8000/alter' --silent --request POST \
   --data $' name: string @index(term) . release_date: datetime @index(year) . revenue: float . running_time: int . starring: [uid] . director: [uid] . \
 type Person { \
   name\
@@ -43,7 +43,7 @@ type Film { \
   running_time \
   starring  \
   director  \
-}' | python -m json.tool "
+}'  "
     )
 
     task1.set_downstream(task2)

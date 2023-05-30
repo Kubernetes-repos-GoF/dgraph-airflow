@@ -12,7 +12,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='dag_cluster_gcp_v5',
+    dag_id='prueba_apt_get',
     default_args = default_args,
     description='this is my first dag',
     start_date=datetime(2023,5,30),
