@@ -39,7 +39,8 @@ Usr: admin
 Pwd: andysanru  
 
 
-### create namespace Dgraph
+## Airflow
+### create namespace airflow
 kubectl create ns airflow  
 
 helm repo add apache-airflow https://airflow.apache.org  
@@ -63,6 +64,30 @@ helm upgrade --install airflow-release apache-airflow/airflow -n airflow -f airf
 helm ls -n airflow  
 
 kubectl get pod -n airflow  
+
+### Gitsync
+ssh-keygen -t rsa -C "andysanru@gmail.com"
+base64 airflow_rsa -w 0 > airflow_rsa.txt
+-- copy to airflow-sync-values.yaml
+
+dags:
+    gitSync:
+        repo: <repo-url>
+        branch: main
+        depth: 1
+        enabled: true
+        subPath: dags
+        sshKeySecret: airflow-ssh-secret
+extraSecrets:
+  airflow-ssh-secret:
+    data: |
+      gitSshKey: '<your-key>'
+
+
+helm ls -n airflow
+helm upgrade --install airflow-release apache-airflow/airflow -n airflow -f airflow-sync-values.yaml --debug
+helm ls -n airflow
+
 
 
 
@@ -95,6 +120,8 @@ kubectl exec -it dgraph-release-dgraph-alpha-0 -n dgraph -- dgraph live -f ./dat
   }  
 }  
 
+!!! Avoid duplicates
+dgraph live --files /data/1/data/dgraph/sample-data/json/countries1.rdf --alpha localhost:9080 --zero <alphaIP:5080 --format=rdf --upsertPredicate "xid"
 
 
 ### Loading data Dgraph Bulk
@@ -144,6 +171,26 @@ https://play.dgraph.io/?latest#
     name@it  
   }  
 }  
+
+### Export
+curl -X POST \
+  'http://localhost:8080/admin' \
+  --header 'Accept: */*' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{"query":"mutation {\n  export(input: { format: \"rdf\" }) {\n    response {\n      message\n      code\n    }\n  }\n}","variables":"{}"}'
+
+
+POST http://localhost:8080/admin
+
+mutation {
+  export(input: { format: "rdf" }) {
+    response {
+      message
+      code
+    }
+  }
+}
+
 
 
 
