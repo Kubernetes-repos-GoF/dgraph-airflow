@@ -20,12 +20,12 @@ with DAG(
 ) as dag:
     task1 = BashOperator(
         task_id='first_task',
-        bash_command= "apt-get update"
+        bash_command= "sudo apt-get update"
     )
 
     task2 = BashOperator(
         task_id = 'second_task',
-        bash_command= "apt-get install -y wget file"
+        bash_command= "sudo apt-get install -y wget file"
     )
 
     task3 = BashOperator(
