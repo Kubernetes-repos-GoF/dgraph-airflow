@@ -9,9 +9,7 @@ default_args = {
 
 dag = DAG('kubectl_example', default_args=default_args, schedule_interval=None)
 
-command = """
-    kubectl get pods
-"""
+command = " kubectl get pods "
 
 run_kubectl_task = KubernetesPodOperator(
     task_id='run_kubectl',

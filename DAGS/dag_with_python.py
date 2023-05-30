@@ -18,7 +18,7 @@ def greet(ti):
 
 with DAG(
     default_args=default_args,
-    dag_id= 'dag_with_python',
+    dag_id= 'xcom_push_pull',
     description='first dag with python',
     start_date=datetime(2023,5,14),
     schedule_interval='@daily'
