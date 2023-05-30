@@ -19,7 +19,7 @@ with DAG(
 ) as dag:
     task1 = BashOperator(
         task_id='first_task',
-        bash_command= "echo dag corriendo primera tarea"
+        bash_command= "gcloud container clusters get-credentials cluster-dgraph-air --zone us-west1-c --project tf-my-gcp"
     )
 
     task2 = BashOperator(
