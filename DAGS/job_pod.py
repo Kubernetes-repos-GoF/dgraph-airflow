@@ -15,7 +15,7 @@ with DAG(
     dag_id='dag_cluster_gcp_v5',
     default_args = default_args,
     description='this is my first dag',
-    start_date=datetime(2023,6,1),
+    start_date=datetime(2023,5,30),
     schedule_interval='@daily'
 ) as dag:
     task1 = BashOperator(
