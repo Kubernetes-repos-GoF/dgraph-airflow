@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import GKEStartPodOperator
+from airflow.providers.google.cloud.operators.kubernetes_engine import GKEStartPodOperator
 from datetime import datetime
 
 default_args = {
@@ -23,7 +23,7 @@ run_kubectl_task = GKEStartPodOperator(
     image='gcr.io/google-containers/kubectl',
     cmds=['sh', '-c'],
     arguments=[command],
-    service_account_key='/home/angel/Descargas/tf-my-gcp-630622c99398.json',
+    service_account_key='',
     get_logs=True,
     dag=dag
 )
