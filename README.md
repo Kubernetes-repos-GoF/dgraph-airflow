@@ -49,6 +49,9 @@ Get external IPs.
 
 ### Dgraph Monitoring
 
+**Note: You may need to add the prometheus repository using these commands:  - helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update** (revisar!)
+
  - helm install kube-prometheus-stack --values dgraph_prometheus_v4.yml,dgraph-backup-alert-rules.yml,dgraph-app-alert-rules.yml --set grafana.adminPassword='dgraph-airflow' prometheus-community/kube-prometheus-stack -n dgraph
  - kubectl get pod -n dgraph  
  - kubectl get svc -n dgraph  
