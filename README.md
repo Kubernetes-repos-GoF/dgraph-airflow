@@ -63,7 +63,8 @@ Search Grafana External IP: kube-prometheus-stack-grafana and Open in Browser, E
 ## Airflow
 ### Deployment
 
- - helm repo add apache-airflow https://airflow.apache.org  
+ - helm repo add apache-airflow https://airflow.apache.org   
+ - helm repo update  (revisar!)
  - helm install airflow-release --values airflow-values.yaml apache-airflow/airflow -n airflow --debug --create-namespace
 
 Customization:
