@@ -26,7 +26,7 @@ dag = DAG(
     'dummy_dag_angel',
     default_args=default_args,
     description='My first DAG',
-    schedule_interval=timedelta(minutes=1),
+    schedule_interval='@daily',
 )
 
 # define the tasks
