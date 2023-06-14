@@ -14,7 +14,7 @@ with DAG(
     dag_id='bash_dag',
     default_args = default_args,
     description='this is bash dag',
-    start_date=datetime(2023,5,12,2),
+    start_date=datetime(2023,6,12,2),
     schedule_interval='@daily'
 ) as dag:
     task1 = BashOperator(

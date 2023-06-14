@@ -20,7 +20,7 @@ with DAG(
     dag_id= 'dgraph_data',
     default_args=default_args,
     description='first dag with dgraph',
-    start_date=datetime(2023,5,14),
+    start_date=datetime(2023,6,13),
     schedule_interval='@daily'
 ) as dag:
     task1 = PythonOperator(
