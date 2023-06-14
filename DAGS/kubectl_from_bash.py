@@ -23,7 +23,7 @@ default_args = {
 
 # defining the DAG
 dag = DAG(
-    'dummy_dag_angel',
+    'dummy_dag_test',
     default_args=default_args,
     description='My first DAG',
     schedule_interval='@daily',
