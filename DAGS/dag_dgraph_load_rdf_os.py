@@ -15,8 +15,6 @@ default_args = {
 
 conf.get('core', 'DAGS_FOLDER')
 
-rdf_path = Variable.get("rdf_path")
-
 def load_rdf_file(ti):
     ti.xcom_push(key='name', value='Mycelium')
     url ="http://34.170.231.213:8080/mutate?commitNow=true"
@@ -37,7 +35,6 @@ with DAG(
     dag_id= 'dgraph_load_rdf_file_os',
     default_args=default_args,
     description='dgraph load data',
-    template_searchpath=rdf_path,
     start_date=datetime(2023,6,15),
     schedule_interval='@daily'
 ) as dag:
