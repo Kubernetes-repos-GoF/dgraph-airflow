@@ -1,4 +1,5 @@
 from airflow import DAG
+from airflow.models import Variable
 from datetime import timedelta, datetime
 from airflow.operators.python import PythonOperator
 import requests
@@ -9,6 +10,8 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
+rdf_path = Variable.get("rdf_path")
+
 def load_rdf_file(ti):
     ti.xcom_push(key='name', value='Mycelium')
     url ="http://34.170.231.213:8080/mutate?commitNow=true"
@@ -17,7 +20,7 @@ def load_rdf_file(ti):
         'Content-Type':'application/rdf',
         'Accept-Encoding':'gzip, deflate'
     }
-    with open('./accountRelations_1c.rdf.gz', 'rb') as dataRaw:
+    with open('accountRelations_1c.rdf.gz', 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
 
@@ -26,9 +29,10 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file',
+    dag_id= 'dgraph_load_rdf_file_var',
     default_args=default_args,
     description='dgraph load data',
+    template_searchpath=rdf_path,
     start_date=datetime(2023,6,15),
     schedule_interval='@daily'
 ) as dag:
