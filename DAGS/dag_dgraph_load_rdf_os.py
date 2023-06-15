@@ -1,14 +1,19 @@
 from airflow import DAG
-from airflow.models import Variable
-from datetime import timedelta, datetime
 from airflow.operators.python import PythonOperator
+from airflow.models import Variable
+from airflow.configuration import conf
+
+from datetime import timedelta, datetime
 import requests
+import os
 
 default_args = {
     'owner': 'mycelium',
     'retries': 5,
     'retry_delay': timedelta(minutes=5)
 }
+
+conf.get('core', 'DAGS_FOLDER')
 
 rdf_path = Variable.get("rdf_path")
 
@@ -20,7 +25,7 @@ def load_rdf_file(ti):
         'Content-Type':'application/rdf',
         'Accept-Encoding':'gzip, deflate'
     }
-    with open('accountRelations_1c.rdf.gz', 'rb') as dataRaw:
+    with open(os.path.join(conf.get('core', 'DAGS_FOLDER'), 'accountRelations_1c.rdf.gz'), 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
 
@@ -29,7 +34,7 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file',
+    dag_id= 'dgraph_load_rdf_file_os',
     default_args=default_args,
     description='dgraph load data',
     template_searchpath=rdf_path,
