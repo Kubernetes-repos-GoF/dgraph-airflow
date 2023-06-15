@@ -1,0 +1,3164 @@
+from airflow import DAG
+from datetime import timedelta, datetime
+from airflow.operators.python import PythonOperator
+import requests
+
+default_args = {
+    'owner': 'mycelium',
+    'retries': 5,
+    'retry_delay': timedelta(minutes=5)
+}
+
+def get_name(ti):
+    ti.xcom_push(key='name', value='Mycelium')
+    url ="http://34.170.231.213:8080/mutate?commitNow=true"
+    headers={
+        'Accept':'*/*',
+        'Content-Type':'application/rdf',
+        'Accept-Encoding':'gzip, deflate'
+    }
+    dataRaw = """{
+        set {
+            _:user-2 <is_test_user> "False" .
+            _:user-2 <is_collaborator_root> "False" .
+            _:user-2 <restriction_profiles> "FRAUDE,PREVENCION,SOLO_RETIRO_MP" .
+            _:user-2 <is_guest_user> "False" .
+            _:user-2 <card_types_contagion> "" .
+            _:user-2 <restrictions> "FRAUDE_ML,MERCHANTCREDITS,RET_MP" .
+            _:user-2 <verification_status> "DOK" .
+            _:user-2 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-2 <is_collaborator> "False" .
+            _:user-2 <is_mshops_user> "False" .
+            _:user-2 <registration_date> "2000-10-10T04:00:00Z" .
+            _:user-2 <card_types_own> "RED,YELLOW_AUTOREMEDY,RED" .
+            _:user-2 <current_verification_status_comment> "[RESTRICTIONS][LEGACY_MIGRATION][LEGACY_MIGRATION][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-2 <decoration_date> "2023-01-06T17:23:18Z" .
+            _:user-2 <dgraph.type> "User" .
+            _:user-2 <id> "user-2" .
+
+            _:user-3 <is_test_user> "False" .
+            _:user-3 <is_collaborator_root> "False" .
+            _:user-3 <restriction_profiles> "" .
+            _:user-3 <is_guest_user> "False" .
+            _:user-3 <restrictions> "" .
+            _:user-3 <verification_status> "DM" .
+            _:user-3 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-3 <is_collaborator> "False" .
+            _:user-3 <is_mshops_user> "False" .
+            _:user-3 <registration_date> "2012-01-11T20:13:54Z" .
+            _:user-3 <decoration_date> "2023-01-27T21:31:55Z" .
+            _:user-3 <dgraph.type> "User" .
+            _:user-3 <id> "user-3" .
+
+            _:user-4 <is_test_user> "False" .
+            _:user-4 <is_collaborator_root> "False" .
+            _:user-4 <restriction_profiles> "" .
+            _:user-4 <is_guest_user> "False" .
+            _:user-4 <restrictions> "" .
+            _:user-4 <verification_status> "DOK" .
+            _:user-4 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-4 <is_collaborator> "False" .
+            _:user-4 <is_mshops_user> "False" .
+            _:user-4 <registration_date> "2012-01-11T20:13:57Z" .
+            _:user-4 <current_verification_status_comment> "[MREVIEW-MS][gcastro]User con historial positivo, sin cruces de riesgo: Vuelve" .
+            _:user-4 <decoration_date> "2022-12-07T17:18:40Z" .
+            _:user-4 <dgraph.type> "User" .
+            _:user-4 <id> "user-4" .
+
+            _:user-5 <is_test_user> "False" .
+            _:user-5 <is_collaborator_root> "False" .
+            _:user-5 <restriction_profiles> "PREVENCION" .
+            _:user-5 <is_collaborator> "False" .
+            _:user-5 <is_mshops_user> "False" .
+            _:user-5 <registration_date> "2012-01-11T20:14:19Z" .
+            _:user-5 <restrictions> "" .
+            _:user-5 <verification_status> "" .
+            _:user-5 <decoration_date> "2022-06-16T13:33:08Z" .
+            _:user-5 <dgraph.type> "User" .
+            _:user-5 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-5 <id> "user-5" .
+
+            _:user-6 <is_test_user> "False" .
+            _:user-6 <is_collaborator_root> "False" .
+            _:user-6 <restriction_profiles> "PREVENCION" .
+            _:user-6 <is_collaborator> "False" .
+            _:user-6 <registration_date> "2012-01-11T20:14:24Z" .
+            _:user-6 <restrictions> "" .
+            _:user-6 <verification_status> "" .
+            _:user-6 <decoration_date> "2022-04-05T04:37:46Z" .
+            _:user-6 <dgraph.type> "User" .
+            _:user-6 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-6 <id> "user-6" .
+
+            _:user-7 <is_test_user> "False" .
+            _:user-7 <is_collaborator_root> "False" .
+            _:user-7 <restriction_profiles> "PREVENCION,TKO" .
+            _:user-7 <card_types_contagion> "" .
+            _:user-7 <restrictions> "TKO,MERCHANTCREDITS" .
+            _:user-7 <verification_status> "PAUSA_IV" .
+            _:user-7 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-7 <is_collaborator> "False" .
+            _:user-7 <is_mshops_user> "False" .
+            _:user-7 <registration_date> "2012-01-11T20:14:54Z" .
+            _:user-7 <card_types_own> "YELLOW_ATO" .
+            _:user-7 <current_verification_status_comment> "PREV:Cuenta sufre hackeo por Perfil Marito. Se loguea desde Smart que comparte con cuentas hackeadas. Para recuperar la cuenta que mande doc fisica, que modif pass/mail y preg secreta. Que formatee la pc, y enviarle mail de consejos de seguridad. " .
+            _:user-7 <decoration_date> "2022-06-16T13:33:43Z" .
+            _:user-7 <dgraph.type> "User" .
+            _:user-7 <id> "user-7" .
+
+            _:user-8 <is_test_user> "False" .
+            _:user-8 <is_collaborator_root> "False" .
+            _:user-8 <restriction_profiles> "FRAUDE,PREVENCION" .
+            _:user-8 <is_guest_user> "False" .
+            _:user-8 <card_types_contagion> "" .
+            _:user-8 <restrictions> "MERCHANTCREDITS,RET_MP" .
+            _:user-8 <verification_status> "PREV_INHAB_PERM" .
+            _:user-8 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-8 <is_collaborator> "False" .
+            _:user-8 <is_mshops_user> "False" .
+            _:user-8 <registration_date> "2012-01-11T20:15:26Z" .
+            _:user-8 <card_types_own> "RED" .
+            _:user-8 <current_verification_status_comment> "[RESTRICTIONS][LEGACY_MIGRATION][LEGACY_MIGRATION][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-8 <decoration_date> "2023-01-21T14:37:08Z" .
+            _:user-8 <dgraph.type> "User" .
+            _:user-8 <id> "user-8" .
+
+            _:user-9 <is_test_user> "False" .
+            _:user-9 <is_collaborator_root> "False" .
+            _:user-9 <restriction_profiles> "PREVENCION,SOLO_RETIRO_MP" .
+            _:user-9 <is_guest_user> "False" .
+            _:user-9 <card_types_contagion> "" .
+            _:user-9 <restrictions> "MERCHANTCREDITS,RET_MP" .
+            _:user-9 <verification_status> "PREV_INHAB_PERM" .
+            _:user-9 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-9 <is_collaborator> "False" .
+            _:user-9 <is_mshops_user> "False" .
+            _:user-9 <registration_date> "2012-01-11T20:15:57Z" .
+            _:user-9 <card_types_own> "RED" .
+            _:user-9 <current_verification_status_comment> "Ação massiva : Cadastros fazem parte de um perfil de fraude da Ba- onde eles utilizam cadastros antigos que estão sem atividade(abandonados)na plataforma para cometer frraude cbk (cartões comprometidos ) ou até mesmo invadir cadastros de comprfadores bons da plateforma para liberar o valor na conta MP com  a qualificação positiva no anúncio fraude dos cadastros que são usados como  vendedor (anunciam produtos como tesoura para cabelereiro e perfume).Não reabilitar.Suzana Pereira - PSML  GRUPO ALARMAS" .
+            _:user-9 <decoration_date> "2022-12-15T19:16:34Z" .
+            _:user-9 <dgraph.type> "User" .
+            _:user-9 <id> "user-9" .
+
+            _:user-10 <is_test_user> "False" .
+            _:user-10 <is_collaborator_root> "False" .
+            _:user-10 <restriction_profiles> "" .
+            _:user-10 <is_guest_user> "False" .
+            _:user-10 <restrictions> "" .
+            _:user-10 <verification_status> "DM" .
+            _:user-10 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-10 <is_collaborator> "False" .
+            _:user-10 <is_mshops_user> "False" .
+            _:user-10 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-10 <current_verification_status_comment> "[DESA][mmoreyra]Migración de portal inmobiliario" .
+            _:user-10 <decoration_date> "2022-12-16T12:31:35Z" .
+            _:user-10 <dgraph.type> "User" .
+            _:user-10 <id> "user-10" .
+
+            _:user-11 <is_test_user> "False" .
+            _:user-11 <is_collaborator_root> "False" .
+            _:user-11 <restriction_profiles> "PREVENCION" .
+            _:user-11 <is_collaborator> "False" .
+            _:user-11 <registration_date> "2012-01-11T20:16:28Z" .
+            _:user-11 <restrictions> "" .
+            _:user-11 <verification_status> "" .
+            _:user-11 <decoration_date> "2022-04-01T00:07:56Z" .
+            _:user-11 <dgraph.type> "User" .
+            _:user-11 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-11 <id> "user-11" .
+
+            _:user-20 <is_test_user> "False" .
+            _:user-20 <is_collaborator_root> "False" .
+            _:user-20 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-20 <card_types_contagion> "" .
+            _:user-20 <restrictions> "RET_MP" .
+            _:user-20 <verification_status> "PREV_INHAB_PERM" .
+            _:user-20 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-20 <is_collaborator> "False" .
+            _:user-20 <is_mshops_user> "False" .
+            _:user-20 <registration_date> "2003-12-02T12:45:34Z" .
+            _:user-20 <card_types_own> "RED" .
+            _:user-20 <current_verification_status_comment> "[manual][manual_review][dcabral] [SCRIPT] - Projeto de liberação de saldo - Contas com saldo retido há mais de 60 dias - aplicado RET_MP. fechado por script. Aplicado por script RM." .
+            _:user-20 <decoration_date> "2022-08-22T14:18:15Z" .
+            _:user-20 <dgraph.type> "User" .
+            _:user-20 <id> "user-20" .
+
+            _:user-21 <is_test_user> "False" .
+            _:user-21 <is_collaborator_root> "False" .
+            _:user-21 <restriction_profiles> "" .
+            _:user-21 <is_collaborator> "False" .
+            _:user-21 <is_mshops_user> "False" .
+            _:user-21 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-21 <restrictions> "" .
+            _:user-21 <verification_status> "NV" .
+            _:user-21 <decoration_date> "2022-08-22T14:18:15Z" .
+            _:user-21 <dgraph.type> "User" .
+            _:user-21 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-21 <id> "user-21" .
+
+            _:user-22 <is_test_user> "False" .
+            _:user-22 <is_collaborator_root> "False" .
+            _:user-22 <restriction_profiles> "" .
+            _:user-22 <is_collaborator> "False" .
+            _:user-22 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-22 <restrictions> "" .
+            _:user-22 <current_verification_status_comment> "[MREVIEW-MS][osouza]Usu?rio sem suspeita de fraude, sem indicies de tko e possui os dados OK. permanece ativo. PS_ML" .
+            _:user-22 <verification_status> "DOK" .
+            _:user-22 <decoration_date> "2020-09-01T10:19:41Z" .
+            _:user-22 <dgraph.type> "User" .
+            _:user-22 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-22 <id> "user-22" .
+
+            _:user-25 <is_test_user> "False" .
+            _:user-25 <is_collaborator_root> "False" .
+            _:user-25 <restriction_profiles> "" .
+            _:user-25 <is_collaborator> "False" .
+            _:user-25 <registration_date> "2012-01-11T20:19:08Z" .
+            _:user-25 <restrictions> "" .
+            _:user-25 <verification_status> "NV" .
+            _:user-25 <decoration_date> "2022-03-31T06:35:55Z" .
+            _:user-25 <dgraph.type> "User" .
+            _:user-25 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-25 <id> "user-25" .
+
+            _:user-27 <is_test_user> "False" .
+            _:user-27 <is_collaborator_root> "False" .
+            _:user-27 <restriction_profiles> "" .
+            _:user-27 <is_collaborator> "False" .
+            _:user-27 <registration_date> "2012-01-11T20:19:46Z" .
+            _:user-27 <restrictions> "" .
+            _:user-27 <verification_status> "NV" .
+            _:user-27 <decoration_date> "2022-03-31T08:11:51Z" .
+            _:user-27 <dgraph.type> "User" .
+            _:user-27 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-27 <id> "user-27" .
+
+            _:user-28 <is_test_user> "False" .
+            _:user-28 <is_collaborator_root> "False" .
+            _:user-28 <restriction_profiles> "" .
+            _:user-28 <is_guest_user> "False" .
+            _:user-28 <restrictions> "" .
+            _:user-28 <verification_status> "DM" .
+            _:user-28 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-28 <is_collaborator> "False" .
+            _:user-28 <is_mshops_user> "False" .
+            _:user-28 <registration_date> "2015-05-03T00:57:21Z" .
+            _:user-28 <decoration_date> "2022-12-20T09:02:59Z" .
+            _:user-28 <dgraph.type> "User" .
+            _:user-28 <id> "user-28" .
+
+            _:user-29 <is_test_user> "False" .
+            _:user-29 <is_collaborator_root> "False" .
+            _:user-29 <restriction_profiles> "" .
+            _:user-29 <is_collaborator> "False" .
+            _:user-29 <registration_date> "2012-05-26T23:53:12Z" .
+            _:user-29 <restrictions> "" .
+            _:user-29 <verification_status> "DM" .
+            _:user-29 <decoration_date> "2022-04-28T21:51:46Z" .
+            _:user-29 <dgraph.type> "User" .
+            _:user-29 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-29 <id> "user-29" .
+
+            _:user-30 <is_test_user> "False" .
+            _:user-30 <is_collaborator_root> "False" .
+            _:user-30 <restriction_profiles> "FRAUDE" .
+            _:user-30 <card_types_contagion> "" .
+            _:user-30 <restrictions> "MONEY_OUT_HI" .
+            _:user-30 <verification_status> "VF" .
+            _:user-30 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-30 <is_collaborator> "False" .
+            _:user-30 <is_mshops_user> "False" .
+            _:user-30 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-30 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-30 <decoration_date> "2022-08-08T18:24:52Z" .
+            _:user-30 <dgraph.type> "User" .
+            _:user-30 <id> "user-30" .
+
+            _:user-31 <is_test_user> "False" .
+            _:user-31 <is_collaborator_root> "False" .
+            _:user-31 <restriction_profiles> "" .
+            _:user-31 <is_guest_user> "False" .
+            _:user-31 <restrictions> "" .
+            _:user-31 <verification_status> "POCF" .
+            _:user-31 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-31 <is_collaborator> "False" .
+            _:user-31 <is_mshops_user> "False" .
+            _:user-31 <registration_date> "2012-01-11T20:21:18Z" .
+            _:user-31 <current_verification_status_comment> "[null][KYC DDFF] Upgrade de cuenta en MLA; se le aplica POCF." .
+            _:user-31 <decoration_date> "2023-01-01T18:57:05Z" .
+            _:user-31 <dgraph.type> "User" .
+            _:user-31 <id> "user-31" .
+
+            _:user-32 <is_test_user> "False" .
+            _:user-32 <is_collaborator_root> "False" .
+            _:user-32 <restriction_profiles> "FRAUDE" .
+            _:user-32 <card_types_contagion> "" .
+            _:user-32 <restrictions> "MONEY_OUT_HI" .
+            _:user-32 <verification_status> "NV" .
+            _:user-32 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-32 <is_collaborator> "False" .
+            _:user-32 <registration_date> "2012-01-11T20:21:49Z" .
+            _:user-32 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-32 <decoration_date> "2022-03-31T15:57:59Z" .
+            _:user-32 <dgraph.type> "User" .
+            _:user-32 <id> "user-32" .
+
+            _:user-33 <is_test_user> "False" .
+            _:user-33 <is_collaborator_root> "False" .
+            _:user-33 <restriction_profiles> "" .
+            _:user-33 <is_collaborator> "False" .
+            _:user-33 <registration_date> "2012-01-11T20:22:03Z" .
+            _:user-33 <restrictions> "" .
+            _:user-33 <verification_status> "NV" .
+            _:user-33 <decoration_date> "2022-03-31T19:35:45Z" .
+            _:user-33 <dgraph.type> "User" .
+            _:user-33 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-33 <id> "user-33" .
+
+            _:user-34 <is_test_user> "False" .
+            _:user-34 <is_collaborator_root> "False" .
+            _:user-34 <restriction_profiles> "FRAUDE" .
+            _:user-34 <card_types_contagion> "" .
+            _:user-34 <restrictions> "MONEY_OUT_HI" .
+            _:user-34 <verification_status> "NV" .
+            _:user-34 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-34 <is_collaborator> "False" .
+            _:user-34 <registration_date> "2012-01-11T20:22:30Z" .
+            _:user-34 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-34 <decoration_date> "2022-03-31T22:15:40Z" .
+            _:user-34 <dgraph.type> "User" .
+            _:user-34 <id> "user-34" .
+
+            _:user-40 <is_test_user> "False" .
+            _:user-40 <is_collaborator_root> "False" .
+            _:user-40 <restriction_profiles> "" .
+            _:user-40 <is_guest_user> "False" .
+            _:user-40 <restrictions> "" .
+            _:user-40 <verification_status> "NV" .
+            _:user-40 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-40 <is_collaborator> "False" .
+            _:user-40 <is_mshops_user> "False" .
+            _:user-40 <registration_date> "2006-12-01T09:20:36Z" .
+            _:user-40 <decoration_date> "2022-09-08T13:24:47Z" .
+            _:user-40 <dgraph.type> "User" .
+            _:user-40 <id> "user-40" .
+
+            _:user-41 <is_test_user> "False" .
+            _:user-41 <is_collaborator_root> "False" .
+            _:user-41 <restriction_profiles> "" .
+            _:user-41 <is_guest_user> "False" .
+            _:user-41 <restrictions> "" .
+            _:user-41 <verification_status> "NV" .
+            _:user-41 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-41 <is_collaborator> "False" .
+            _:user-41 <is_mshops_user> "False" .
+            _:user-41 <registration_date> "2012-01-11T20:22:34Z" .
+            _:user-41 <decoration_date> "2022-09-08T13:24:47Z" .
+            _:user-41 <dgraph.type> "User" .
+            _:user-41 <id> "user-41" .
+
+            _:user-42 <is_test_user> "False" .
+            _:user-42 <is_collaborator_root> "False" .
+            _:user-42 <restriction_profiles> "" .
+            _:user-42 <is_collaborator> "False" .
+            _:user-42 <registration_date> "2012-01-11T20:22:48Z" .
+            _:user-42 <restrictions> "" .
+            _:user-42 <verification_status> "DM" .
+            _:user-42 <decoration_date> "2022-04-01T15:06:56Z" .
+            _:user-42 <dgraph.type> "User" .
+            _:user-42 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-42 <id> "user-42" .
+
+            _:user-45 <is_collaborator_root> "False" .
+            _:user-45 <restriction_profiles> "FRAUDE" .
+            _:user-45 <is_collaborator> "False" .
+            _:user-45 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-45 <card_types_contagion> "" .
+            _:user-45 <restrictions> "MONEY_OUT_HI" .
+            _:user-45 <verification_status> "NV" .
+            _:user-45 <decoration_date> "2020-02-14T15:56:19" .
+            _:user-45 <dgraph.type> "User" .
+            _:user-45 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-45 <id> "user-45" .
+
+            _:user-46 <is_test_user> "False" .
+            _:user-46 <is_collaborator_root> "False" .
+            _:user-46 <restriction_profiles> "" .
+            _:user-46 <is_collaborator> "False" .
+            _:user-46 <registration_date> "2012-01-11T20:24:55Z" .
+            _:user-46 <restrictions> "" .
+            _:user-46 <verification_status> "NV" .
+            _:user-46 <decoration_date> "2022-04-02T06:28:37Z" .
+            _:user-46 <dgraph.type> "User" .
+            _:user-46 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-46 <id> "user-46" .
+
+            _:user-47 <is_test_user> "False" .
+            _:user-47 <is_collaborator_root> "False" .
+            _:user-47 <restriction_profiles> "" .
+            _:user-47 <is_guest_user> "False" .
+            _:user-47 <restrictions> "" .
+            _:user-47 <verification_status> "DM" .
+            _:user-47 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-47 <is_collaborator> "False" .
+            _:user-47 <is_mshops_user> "False" .
+            _:user-47 <registration_date> "2012-01-11T20:24:57Z" .
+            _:user-47 <decoration_date> "2022-11-23T14:17:01Z" .
+            _:user-47 <dgraph.type> "User" .
+            _:user-47 <id> "user-47" .
+
+            _:user-48 <is_collaborator_root> "False" .
+            _:user-48 <restriction_profiles> "FRAUDE" .
+            _:user-48 <is_collaborator> "False" .
+            _:user-48 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-48 <card_types_contagion> "" .
+            _:user-48 <restrictions> "MONEY_OUT_HI" .
+            _:user-48 <verification_status> "NV" .
+            _:user-48 <decoration_date> "2020-02-14T15:56:19" .
+            _:user-48 <dgraph.type> "User" .
+            _:user-48 <id> "user-48" .
+
+            _:user-49 <is_test_user> "False" .
+            _:user-49 <is_collaborator_root> "False" .
+            _:user-49 <restriction_profiles> "" .
+            _:user-49 <is_guest_user> "False" .
+            _:user-49 <restrictions> "" .
+            _:user-49 <verification_status> "DM" .
+            _:user-49 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-49 <is_collaborator> "False" .
+            _:user-49 <is_mshops_user> "False" .
+            _:user-49 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-49 <decoration_date> "2022-12-29T10:38:28Z" .
+            _:user-49 <dgraph.type> "User" .
+            _:user-49 <id> "user-49" .
+
+            _:user-50 <is_test_user> "False" .
+            _:user-50 <is_collaborator_root> "False" .
+            _:user-50 <restriction_profiles> "" .
+            _:user-50 <is_collaborator> "False" .
+            _:user-50 <registration_date> "2012-01-11T20:30:15Z" .
+            _:user-50 <restrictions> "" .
+            _:user-50 <verification_status> "NV" .
+            _:user-50 <decoration_date> "2022-05-11T17:33:09Z" .
+            _:user-50 <dgraph.type> "User" .
+            _:user-50 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-50 <id> "user-50" .
+
+            _:user-51 <is_test_user> "False" .
+            _:user-51 <is_collaborator_root> "False" .
+            _:user-51 <restriction_profiles> "" .
+            _:user-51 <is_collaborator> "False" .
+            _:user-51 <registration_date> "2012-01-11T20:30:31Z" .
+            _:user-51 <restrictions> "" .
+            _:user-51 <verification_status> "DM" .
+            _:user-51 <decoration_date> "2022-05-11T17:33:09Z" .
+            _:user-51 <dgraph.type> "User" .
+            _:user-51 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-51 <id> "user-51" .
+
+            _:user-52 <is_test_user> "False" .
+            _:user-52 <is_collaborator_root> "False" .
+            _:user-52 <restriction_profiles> "" .
+            _:user-52 <is_collaborator> "False" .
+            _:user-52 <registration_date> "2012-01-11T20:31:28Z" .
+            _:user-52 <restrictions> "" .
+            _:user-52 <verification_status> "NV" .
+            _:user-52 <decoration_date> "2022-04-03T06:14:09Z" .
+            _:user-52 <dgraph.type> "User" .
+            _:user-52 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-52 <id> "user-52" .
+
+            _:user-53 <is_test_user> "False" .
+            _:user-53 <is_collaborator_root> "False" .
+            _:user-53 <restriction_profiles> "FRAUDE" .
+            _:user-53 <card_types_contagion> "" .
+            _:user-53 <restrictions> "MONEY_OUT_HI" .
+            _:user-53 <verification_status> "NV" .
+            _:user-53 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-53 <is_collaborator> "False" .
+            _:user-53 <registration_date> "2012-01-11T20:31:29Z" .
+            _:user-53 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-53 <decoration_date> "2022-04-03T10:54:10Z" .
+            _:user-53 <dgraph.type> "User" .
+            _:user-53 <id> "user-53" .
+
+            _:user-54 <is_collaborator_root> "False" .
+            _:user-54 <restriction_profiles> "FRAUDE" .
+            _:user-54 <is_collaborator> "False" .
+            _:user-54 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-54 <card_types_contagion> "" .
+            _:user-54 <restrictions> "MONEY_OUT_HI" .
+            _:user-54 <verification_status> "NV" .
+            _:user-54 <decoration_date> "2020-02-14T15:56:18" .
+            _:user-54 <dgraph.type> "User" .
+            _:user-54 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-54 <id> "user-54" .
+
+            _:user-55 <is_test_user> "False" .
+            _:user-55 <is_collaborator_root> "False" .
+            _:user-55 <restriction_profiles> "" .
+            _:user-55 <is_guest_user> "False" .
+            _:user-55 <restrictions> "" .
+            _:user-55 <verification_status> "DM" .
+            _:user-55 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-55 <is_collaborator> "False" .
+            _:user-55 <is_mshops_user> "False" .
+            _:user-55 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-55 <decoration_date> "2022-12-22T20:04:39Z" .
+            _:user-55 <dgraph.type> "User" .
+            _:user-55 <id> "user-55" .
+
+            _:user-56 <is_test_user> "False" .
+            _:user-56 <is_collaborator_root> "False" .
+            _:user-56 <restriction_profiles> "" .
+            _:user-56 <is_collaborator> "False" .
+            _:user-56 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-56 <restrictions> "" .
+            _:user-56 <verification_status> "DM" .
+            _:user-56 <decoration_date> "2020-07-02T12:39:32Z" .
+            _:user-56 <dgraph.type> "User" .
+            _:user-56 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-56 <id> "user-56" .
+
+            _:user-58 <is_test_user> "False" .
+            _:user-58 <is_collaborator_root> "False" .
+            _:user-58 <restriction_profiles> "" .
+            _:user-58 <is_guest_user> "False" .
+            _:user-58 <restrictions> "" .
+            _:user-58 <verification_status> "DM" .
+            _:user-58 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-58 <is_collaborator> "False" .
+            _:user-58 <is_mshops_user> "False" .
+            _:user-58 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-58 <decoration_date> "2023-01-20T19:14:38Z" .
+            _:user-58 <dgraph.type> "User" .
+            _:user-58 <id> "user-58" .
+
+            _:user-59 <is_test_user> "False" .
+            _:user-59 <is_collaborator_root> "False" .
+            _:user-59 <restriction_profiles> "FRAUDE" .
+            _:user-59 <card_types_contagion> "" .
+            _:user-59 <restrictions> "MONEY_OUT_HI" .
+            _:user-59 <verification_status> "DM" .
+            _:user-59 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-59 <is_collaborator> "False" .
+            _:user-59 <registration_date> "2012-01-11T20:35:15Z" .
+            _:user-59 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-59 <decoration_date> "2021-07-01T19:32:49Z" .
+            _:user-59 <dgraph.type> "User" .
+            _:user-59 <id> "user-59" .
+
+            _:user-60 <is_test_user> "False" .
+            _:user-60 <is_collaborator_root> "False" .
+            _:user-60 <restriction_profiles> "" .
+            _:user-60 <is_collaborator> "False" .
+            _:user-60 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-60 <restrictions> "" .
+            _:user-60 <verification_status> "EXT" .
+            _:user-60 <decoration_date> "2022-02-08T12:00:48Z" .
+            _:user-60 <dgraph.type> "User" .
+            _:user-60 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-60 <id> "user-60" .
+
+            _:user-61 <is_test_user> "False" .
+            _:user-61 <registration_date> "2011-09-05T11:00:00Z" .
+            _:user-61 <restrictions> "" .
+            _:user-61 <verification_status> "NV" .
+            _:user-61 <dgraph.type> "User" .
+            _:user-61 <id> "user-61" .
+
+            _:user-62 <is_collaborator_root> "False" .
+            _:user-62 <restriction_profiles> "FRAUDE" .
+            _:user-62 <is_collaborator> "False" .
+            _:user-62 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-62 <card_types_contagion> "" .
+            _:user-62 <restrictions> "MONEY_OUT_HI" .
+            _:user-62 <verification_status> "PN" .
+            _:user-62 <decoration_date> "2020-02-14T15:56:19" .
+            _:user-62 <dgraph.type> "User" .
+            _:user-62 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-62 <id> "user-62" .
+
+            _:user-64 <is_test_user> "False" .
+            _:user-64 <registration_date> "2000-09-05T11:00:00Z" .
+            _:user-64 <card_types_own> "" .
+            _:user-64 <card_types_contagion> "" .
+            _:user-64 <dgraph.type> "User" .
+            _:user-64 <id> "user-64" .
+
+            _:user-65 <is_collaborator_root> "False" .
+            _:user-65 <restriction_profiles> "FRAUDE" .
+            _:user-65 <is_collaborator> "False" .
+            _:user-65 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-65 <card_types_contagion> "" .
+            _:user-65 <restrictions> "MONEY_OUT_HI" .
+            _:user-65 <verification_status> "NV" .
+            _:user-65 <decoration_date> "2020-02-14T15:56:19" .
+            _:user-65 <dgraph.type> "User" .
+            _:user-65 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-65 <id> "user-65" .
+
+            _:user-66 <is_test_user> "False" .
+            _:user-66 <registration_date> "2011-09-05T11:00:00Z" .
+            _:user-66 <card_types_own> "" .
+            _:user-66 <card_types_contagion> "" .
+            _:user-66 <dgraph.type> "User" .
+            _:user-66 <id> "user-66" .
+
+            _:user-67 <is_test_user> "False" .
+            _:user-67 <is_collaborator_root> "False" .
+            _:user-67 <restriction_profiles> "" .
+            _:user-67 <is_guest_user> "False" .
+            _:user-67 <restrictions> "" .
+            _:user-67 <verification_status> "DM" .
+            _:user-67 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-67 <is_collaborator> "False" .
+            _:user-67 <is_mshops_user> "False" .
+            _:user-67 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-67 <decoration_date> "2022-11-05T15:05:19Z" .
+            _:user-67 <dgraph.type> "User" .
+            _:user-67 <id> "user-67" .
+
+            _:user-68 <is_test_user> "False" .
+            _:user-68 <is_collaborator_root> "False" .
+            _:user-68 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-68 <is_guest_user> "False" .
+            _:user-68 <card_types_contagion> "" .
+            _:user-68 <restrictions> "RET_MP" .
+            _:user-68 <verification_status> "DUP_PERM" .
+            _:user-68 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-68 <is_collaborator> "False" .
+            _:user-68 <is_mshops_user> "False" .
+            _:user-68 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-68 <card_types_own> "RED" .
+            _:user-68 <current_verification_status_comment> "[fraudMP]FraudeML  device_id 525823dae4b0fe39aacb330b cust_id asociados [ (direct_crosses vendcont crosses_device_ml 140625132 VENDCONT) ] la cuenta en vendcont mencionada debe resolver su situacion para que esta cuenta se pueda habilitar" .
+            _:user-68 <decoration_date> "2022-12-28T14:05:44Z" .
+            _:user-68 <dgraph.type> "User" .
+            _:user-68 <id> "user-68" .
+
+            _:user-70 <is_test_user> "False" .
+            _:user-70 <is_collaborator_root> "False" .
+            _:user-70 <restriction_profiles> "FRAUDE" .
+            _:user-70 <card_types_contagion> "" .
+            _:user-70 <restrictions> "MONEY_OUT_HI" .
+            _:user-70 <verification_status> "DM" .
+            _:user-70 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-70 <is_collaborator> "False" .
+            _:user-70 <registration_date> "2009-12-23T02:27:47Z" .
+            _:user-70 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-70 <decoration_date> "2022-02-05T14:40:37Z" .
+            _:user-70 <dgraph.type> "User" .
+            _:user-70 <id> "user-70" .
+
+            _:user-71 <is_collaborator_root> "False" .
+            _:user-71 <restriction_profiles> "FRAUDE" .
+            _:user-71 <is_collaborator> "False" .
+            _:user-71 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-71 <card_types_contagion> "" .
+            _:user-71 <restrictions> "MONEY_OUT_HI" .
+            _:user-71 <verification_status> "DM" .
+            _:user-71 <decoration_date> "2020-02-14T15:56:29" .
+            _:user-71 <dgraph.type> "User" .
+            _:user-71 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-71 <id> "user-71" .
+
+            _:user-72 <is_test_user> "False" .
+            _:user-72 <is_collaborator_root> "False" .
+            _:user-72 <restriction_profiles> "FRAUDE" .
+            _:user-72 <card_types_contagion> "" .
+            _:user-72 <restrictions> "MONEY_OUT_HI" .
+            _:user-72 <verification_status> "DM" .
+            _:user-72 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-72 <is_collaborator> "False" .
+            _:user-72 <registration_date> "2009-12-23T02:29:04Z" .
+            _:user-72 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-72 <decoration_date> "2021-08-01T20:00:51Z" .
+            _:user-72 <dgraph.type> "User" .
+            _:user-72 <id> "user-72" .
+
+            _:user-73 <is_collaborator_root> "False" .
+            _:user-73 <restriction_profiles> "FRAUDE" .
+            _:user-73 <is_collaborator> "False" .
+            _:user-73 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-73 <card_types_contagion> "" .
+            _:user-73 <restrictions> "MONEY_OUT_HI" .
+            _:user-73 <verification_status> "DM" .
+            _:user-73 <decoration_date> "2020-02-14T15:56:28" .
+            _:user-73 <dgraph.type> "User" .
+            _:user-73 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-73 <id> "user-73" .
+
+            _:user-74 <is_test_user> "False" .
+            _:user-74 <is_collaborator_root> "False" .
+            _:user-74 <restriction_profiles> "" .
+            _:user-74 <is_guest_user> "False" .
+            _:user-74 <restrictions> "" .
+            _:user-74 <verification_status> "DM" .
+            _:user-74 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-74 <is_collaborator> "False" .
+            _:user-74 <is_mshops_user> "False" .
+            _:user-74 <registration_date> "2009-12-23T02:29:11Z" .
+            _:user-74 <decoration_date> "2023-01-04T21:23:02Z" .
+            _:user-74 <dgraph.type> "User" .
+            _:user-74 <id> "user-74" .
+
+            _:user-75 <is_test_user> "False" .
+            _:user-75 <is_collaborator_root> "False" .
+            _:user-75 <restriction_profiles> "" .
+            _:user-75 <is_collaborator> "False" .
+            _:user-75 <registration_date> "2009-12-23T02:29:15Z" .
+            _:user-75 <restrictions> "" .
+            _:user-75 <verification_status> "DM" .
+            _:user-75 <decoration_date> "2022-03-25T20:29:40Z" .
+            _:user-75 <dgraph.type> "User" .
+            _:user-75 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-75 <id> "user-75" .
+
+            _:user-77 <is_collaborator_root> "False" .
+            _:user-77 <restriction_profiles> "FRAUDE" .
+            _:user-77 <is_collaborator> "False" .
+            _:user-77 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-77 <card_types_contagion> "" .
+            _:user-77 <restrictions> "MONEY_OUT_HI" .
+            _:user-77 <verification_status> "NV" .
+            _:user-77 <decoration_date> "2020-02-14T15:56:29" .
+            _:user-77 <dgraph.type> "User" .
+            _:user-77 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-77 <id> "user-77" .
+
+            _:user-78 <is_test_user> "False" .
+            _:user-78 <is_collaborator_root> "False" .
+            _:user-78 <restriction_profiles> "FRAUDE" .
+            _:user-78 <card_types_contagion> "" .
+            _:user-78 <restrictions> "MONEY_OUT_HI" .
+            _:user-78 <verification_status> "DOK" .
+            _:user-78 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-78 <is_collaborator> "False" .
+            _:user-78 <is_mshops_user> "False" .
+            _:user-78 <registration_date> "2009-12-23T02:29:34Z" .
+            _:user-78 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-78 <current_verification_status_comment> "[manual_review][Rehab proactiva - Inhabilitaciones antiguas en desuso]" .
+            _:user-78 <decoration_date> "2022-06-16T17:16:32Z" .
+            _:user-78 <dgraph.type> "User" .
+            _:user-78 <id> "user-78" .
+
+            _:user-79 <is_test_user> "False" .
+            _:user-79 <registration_date> "2009-12-22T21:29:26Z" .
+            _:user-79 <card_types_own> "" .
+            _:user-79 <card_types_contagion> "" .
+            _:user-79 <dgraph.type> "User" .
+            _:user-79 <id> "user-79" .
+
+            _:user-81 <is_test_user> "False" .
+            _:user-81 <registration_date> "2000-09-05T11:00:00Z" .
+            _:user-81 <card_types_own> "RED,RED" .
+            _:user-81 <card_types_contagion> "" .
+            _:user-81 <dgraph.type> "User" .
+            _:user-81 <id> "user-81" .
+
+            _:user-83 <is_test_user> "False" .
+            _:user-83 <is_collaborator_root> "False" .
+            _:user-83 <restriction_profiles> "FRAUDE,PREVENCION" .
+            _:user-83 <is_guest_user> "False" .
+            _:user-83 <card_types_contagion> "" .
+            _:user-83 <restrictions> "ALERTA_DISPUTAS,FRAUDE_ML,RET_MP" .
+            _:user-83 <verification_status> "PAUSA_IV" .
+            _:user-83 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-83 <is_collaborator> "False" .
+            _:user-83 <is_mshops_user> "False" .
+            _:user-83 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-83 <card_types_own> "RED,RED" .
+            _:user-83 <current_verification_status_comment> "[RESTRICTIONS][LEGACY_MIGRATION][LEGACY_MIGRATION][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-83 <decoration_date> "2022-12-23T17:26:38Z" .
+            _:user-83 <dgraph.type> "User" .
+            _:user-83 <id> "user-83" .
+
+            _:user-84 <is_test_user> "False" .
+            _:user-84 <is_collaborator_root> "False" .
+            _:user-84 <restriction_profiles> "FRAUDE" .
+            _:user-84 <card_types_contagion> "" .
+            _:user-84 <restrictions> "MONEY_OUT_HI" .
+            _:user-84 <verification_status> "DM" .
+            _:user-84 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-84 <is_collaborator> "False" .
+            _:user-84 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-84 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-84 <decoration_date> "2021-08-03T01:46:32Z" .
+            _:user-84 <dgraph.type> "User" .
+            _:user-84 <id> "user-84" .
+
+            _:user-85 <is_test_user> "False" .
+            _:user-85 <is_collaborator_root> "False" .
+            _:user-85 <restriction_profiles> "FRAUDE" .
+            _:user-85 <card_types_contagion> "" .
+            _:user-85 <restrictions> "MONEY_OUT_HI" .
+            _:user-85 <verification_status> "DM" .
+            _:user-85 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-85 <is_collaborator> "False" .
+            _:user-85 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-85 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-85 <decoration_date> "2021-12-15T00:21:07Z" .
+            _:user-85 <dgraph.type> "User" .
+            _:user-85 <id> "user-85" .
+
+            _:user-87 <is_test_user> "False" .
+            _:user-87 <is_collaborator_root> "False" .
+            _:user-87 <restriction_profiles> "" .
+            _:user-87 <is_collaborator> "False" .
+            _:user-87 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-87 <restrictions> "" .
+            _:user-87 <verification_status> "DM" .
+            _:user-87 <decoration_date> "2021-06-14T18:38:38Z" .
+            _:user-87 <dgraph.type> "User" .
+            _:user-87 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-87 <id> "user-87" .
+
+            _:user-89 <is_test_user> "False" .
+            _:user-89 <is_collaborator_root> "False" .
+            _:user-89 <restriction_profiles> "" .
+            _:user-89 <is_guest_user> "False" .
+            _:user-89 <restrictions> "" .
+            _:user-89 <verification_status> "DM" .
+            _:user-89 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-89 <is_collaborator> "False" .
+            _:user-89 <is_mshops_user> "False" .
+            _:user-89 <registration_date> "2009-12-23T02:30:02Z" .
+            _:user-89 <decoration_date> "2023-01-17T00:22:34Z" .
+            _:user-89 <dgraph.type> "User" .
+            _:user-89 <id> "user-89" .
+
+            _:user-90 <is_test_user> "False" .
+            _:user-90 <is_collaborator_root> "False" .
+            _:user-90 <restriction_profiles> "" .
+            _:user-90 <is_guest_user> "False" .
+            _:user-90 <restrictions> "" .
+            _:user-90 <verification_status> "DM" .
+            _:user-90 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-90 <is_collaborator> "False" .
+            _:user-90 <is_mshops_user> "False" .
+            _:user-90 <registration_date> "2009-12-23T02:31:13Z" .
+            _:user-90 <decoration_date> "2022-10-13T02:39:33Z" .
+            _:user-90 <dgraph.type> "User" .
+            _:user-90 <id> "user-90" .
+
+            _:user-91 <is_test_user> "False" .
+            _:user-91 <is_collaborator_root> "False" .
+            _:user-91 <restriction_profiles> "" .
+            _:user-91 <is_guest_user> "False" .
+            _:user-91 <restrictions> "" .
+            _:user-91 <verification_status> "DM" .
+            _:user-91 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-91 <is_collaborator> "False" .
+            _:user-91 <is_mshops_user> "False" .
+            _:user-91 <registration_date> "2009-12-23T02:31:01Z" .
+            _:user-91 <decoration_date> "2022-12-22T15:49:05Z" .
+            _:user-91 <dgraph.type> "User" .
+            _:user-91 <id> "user-91" .
+
+            _:user-93 <is_collaborator_root> "False" .
+            _:user-93 <restriction_profiles> "FRAUDE" .
+            _:user-93 <is_collaborator> "False" .
+            _:user-93 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-93 <card_types_contagion> "" .
+            _:user-93 <restrictions> "MONEY_OUT_HI" .
+            _:user-93 <verification_status> "NV" .
+            _:user-93 <decoration_date> "2020-02-14T15:56:39" .
+            _:user-93 <dgraph.type> "User" .
+            _:user-93 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-93 <id> "user-93" .
+
+            _:user-96 <is_test_user> "False" .
+            _:user-96 <is_collaborator_root> "False" .
+            _:user-96 <restriction_profiles> "" .
+            _:user-96 <is_guest_user> "False" .
+            _:user-96 <restrictions> "" .
+            _:user-96 <verification_status> "DM" .
+            _:user-96 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-96 <is_collaborator> "False" .
+            _:user-96 <is_mshops_user> "False" .
+            _:user-96 <registration_date> "2009-12-23T02:32:09Z" .
+            _:user-96 <decoration_date> "2022-11-04T21:43:27Z" .
+            _:user-96 <dgraph.type> "User" .
+            _:user-96 <id> "user-96" .
+
+            _:user-98 <is_collaborator_root> "False" .
+            _:user-98 <restriction_profiles> "FRAUDE" .
+            _:user-98 <is_collaborator> "False" .
+            _:user-98 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-98 <card_types_contagion> "" .
+            _:user-98 <restrictions> "MONEY_OUT_HI" .
+            _:user-98 <verification_status> "DM" .
+            _:user-98 <decoration_date> "2020-02-14T15:56:38" .
+            _:user-98 <dgraph.type> "User" .
+            _:user-98 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-98 <id> "user-98" .
+
+            _:user-99 <is_test_user> "False" .
+            _:user-99 <is_collaborator_root> "False" .
+            _:user-99 <restriction_profiles> "" .
+            _:user-99 <is_guest_user> "False" .
+            _:user-99 <restrictions> "" .
+            _:user-99 <verification_status> "DOK" .
+            _:user-99 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-99 <is_collaborator> "False" .
+            _:user-99 <is_mshops_user> "False" .
+            _:user-99 <registration_date> "2009-12-23T02:31:58Z" .
+            _:user-99 <current_verification_status_comment> "[auto][testcrm]Applying DOK because user has passed IV Challenge" .
+            _:user-99 <decoration_date> "2022-12-15T02:01:58Z" .
+            _:user-99 <dgraph.type> "User" .
+            _:user-99 <id> "user-99" .
+
+            _:user-100 <is_test_user> "False" .
+            _:user-100 <is_collaborator_root> "False" .
+            _:user-100 <restriction_profiles> "FRAUDE" .
+            _:user-100 <is_collaborator> "False" .
+            _:user-100 <registration_date> "2009-12-23T02:32:13Z" .
+            _:user-100 <restrictions> "MONEY_OUT_HI" .
+            _:user-100 <verification_status> "NV" .
+            _:user-100 <decoration_date> "2022-05-06T16:56:59Z" .
+            _:user-100 <dgraph.type> "User" .
+            _:user-100 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-100 <id> "user-100" .
+
+            _:user-101 <is_test_user> "False" .
+            _:user-101 <is_collaborator_root> "False" .
+            _:user-101 <restriction_profiles> "FRAUDE" .
+            _:user-101 <card_types_contagion> "" .
+            _:user-101 <restrictions> "MONEY_OUT_HI" .
+            _:user-101 <verification_status> "NV" .
+            _:user-101 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-101 <is_collaborator> "False" .
+            _:user-101 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-101 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-101 <decoration_date> "2022-05-11T17:55:55Z" .
+            _:user-101 <dgraph.type> "User" .
+            _:user-101 <id> "user-101" .
+
+            _:user-102 <is_test_user> "False" .
+            _:user-102 <is_collaborator_root> "False" .
+            _:user-102 <restriction_profiles> "FRAUDE" .
+            _:user-102 <is_guest_user> "False" .
+            _:user-102 <card_types_contagion> "" .
+            _:user-102 <restrictions> "MONEY_OUT_HI" .
+            _:user-102 <verification_status> "PN" .
+            _:user-102 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-102 <is_collaborator> "False" .
+            _:user-102 <is_mshops_user> "False" .
+            _:user-102 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-102 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-102 <current_verification_status_comment> "[MANUAL][gestol]Aplicacion de mavisa de PN por inconsistencia retroactiva" .
+            _:user-102 <decoration_date> "2022-11-23T17:53:10Z" .
+            _:user-102 <dgraph.type> "User" .
+            _:user-102 <id> "user-102" .
+
+            _:user-103 <is_collaborator_root> "False" .
+            _:user-103 <restriction_profiles> "FRAUDE" .
+            _:user-103 <is_collaborator> "False" .
+            _:user-103 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-103 <card_types_contagion> "" .
+            _:user-103 <restrictions> "MONEY_OUT_HI" .
+            _:user-103 <verification_status> "DM" .
+            _:user-103 <decoration_date> "2020-02-14T15:56:39" .
+            _:user-103 <dgraph.type> "User" .
+            _:user-103 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-103 <id> "user-103" .
+
+            _:user-104 <is_collaborator_root> "False" .
+            _:user-104 <restriction_profiles> "FRAUDE" .
+            _:user-104 <is_collaborator> "False" .
+            _:user-104 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-104 <card_types_contagion> "" .
+            _:user-104 <restrictions> "MONEY_OUT_HI" .
+            _:user-104 <verification_status> "DM" .
+            _:user-104 <decoration_date> "2020-02-14T15:56:38" .
+            _:user-104 <dgraph.type> "User" .
+            _:user-104 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-104 <id> "user-104" .
+
+            _:user-105 <is_test_user> "False" .
+            _:user-105 <is_collaborator_root> "False" .
+            _:user-105 <restriction_profiles> "FRAUDE" .
+            _:user-105 <card_types_contagion> "" .
+            _:user-105 <restrictions> "MONEY_OUT_HI" .
+            _:user-105 <verification_status> "DM" .
+            _:user-105 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-105 <is_collaborator> "False" .
+            _:user-105 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-105 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-105 <decoration_date> "2020-11-12T12:56:39Z" .
+            _:user-105 <dgraph.type> "User" .
+            _:user-105 <id> "user-105" .
+
+            _:user-106 <is_test_user> "False" .
+            _:user-106 <is_collaborator_root> "False" .
+            _:user-106 <restriction_profiles> "FRAUDE" .
+            _:user-106 <is_guest_user> "False" .
+            _:user-106 <card_types_contagion> "" .
+            _:user-106 <restrictions> "MONEY_OUT_HI,FRAUDE_ML" .
+            _:user-106 <verification_status> "PAUSA_IV" .
+            _:user-106 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-106 <is_collaborator> "False" .
+            _:user-106 <is_mshops_user> "False" .
+            _:user-106 <registration_date> "2009-12-23T02:33:25Z" .
+            _:user-106 <card_types_own> "RED,RED" .
+            _:user-106 <current_verification_status_comment> "Usuário comprador ROSEMARIZINHA, possui ligação com o vendedor ALICEMARIA05 na transação do MercadoPago. Tentativa de fraude entre comprador e vendedor. Caso o usuário entre em contato, favor solicitar ao mesmo uma explicação do motivo pelo qual possuem dados que coincidem com a contraparte, após o envio da explicação, consultar cola safeharbor.mp. PSMP. " .
+            _:user-106 <decoration_date> "2022-12-21T17:12:01Z" .
+            _:user-106 <dgraph.type> "User" .
+            _:user-106 <id> "user-106" .
+
+            _:user-107 <is_test_user> "False" .
+            _:user-107 <is_collaborator_root> "False" .
+            _:user-107 <restriction_profiles> "FRAUDE" .
+            _:user-107 <card_types_contagion> "" .
+            _:user-107 <restrictions> "MONEY_OUT_HI" .
+            _:user-107 <verification_status> "DM" .
+            _:user-107 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-107 <is_collaborator> "False" .
+            _:user-107 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-107 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-107 <decoration_date> "2022-05-08T04:21:40Z" .
+            _:user-107 <dgraph.type> "User" .
+            _:user-107 <id> "user-107" .
+
+            _:user-108 <is_test_user> "False" .
+            _:user-108 <is_collaborator_root> "False" .
+            _:user-108 <restriction_profiles> "FRAUDE,SOLO_RETIRO_MP" .
+            _:user-108 <is_guest_user> "False" .
+            _:user-108 <card_types_contagion> "" .
+            _:user-108 <restrictions> "MONEY_OUT_HI,RET_MP" .
+            _:user-108 <verification_status> "PAUSA_IV" .
+            _:user-108 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-108 <is_collaborator> "False" .
+            _:user-108 <is_mshops_user> "False" .
+            _:user-108 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-108 <card_types_own> "RED,RED" .
+            _:user-108 <current_verification_status_comment> "[fraud-batch-rules by Penalties][testcrm][REGISTRACIONES MASIVAS LEGACY] Se restringe user por sospecha de registración masiva." .
+            _:user-108 <decoration_date> "2022-12-02T17:18:30Z" .
+            _:user-108 <dgraph.type> "User" .
+            _:user-108 <id> "user-108" .
+
+            _:user-109 <is_collaborator_root> "False" .
+            _:user-109 <restriction_profiles> "FRAUDE" .
+            _:user-109 <is_collaborator> "False" .
+            _:user-109 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-109 <card_types_contagion> "" .
+            _:user-109 <restrictions> "MONEY_OUT_HI" .
+            _:user-109 <verification_status> "NV" .
+            _:user-109 <decoration_date> "2020-02-14T15:56:39" .
+            _:user-109 <dgraph.type> "User" .
+            _:user-109 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-109 <id> "user-109" .
+
+            _:user-110 <is_collaborator_root> "False" .
+            _:user-110 <restriction_profiles> "FRAUDE" .
+            _:user-110 <is_collaborator> "False" .
+            _:user-110 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-110 <card_types_contagion> "" .
+            _:user-110 <restrictions> "MONEY_OUT_HI" .
+            _:user-110 <verification_status> "VF" .
+            _:user-110 <decoration_date> "2020-02-14T15:56:38" .
+            _:user-110 <dgraph.type> "User" .
+            _:user-110 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-110 <id> "user-110" .
+
+            _:user-111 <is_test_user> "False" .
+            _:user-111 <is_collaborator_root> "False" .
+            _:user-111 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-111 <is_guest_user> "False" .
+            _:user-111 <card_types_contagion> "" .
+            _:user-111 <restrictions> "RET_MP" .
+            _:user-111 <verification_status> "PREV_INHAB_PERM" .
+            _:user-111 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-111 <is_collaborator> "False" .
+            _:user-111 <is_mshops_user> "False" .
+            _:user-111 <registration_date> "2012-01-11T20:30:59Z" .
+            _:user-111 <card_types_own> "RED" .
+            _:user-111 <current_verification_status_comment> "[RESTRICTIONS][FONDEO_FRAUDULENTO][FONDEO_FRAUDULENTO][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-111 <decoration_date> "2023-01-14T17:26:14Z" .
+            _:user-111 <dgraph.type> "User" .
+            _:user-111 <id> "user-111" .
+
+            _:user-112 <is_test_user> "False" .
+            _:user-112 <is_collaborator_root> "False" .
+            _:user-112 <restriction_profiles> "" .
+            _:user-112 <is_guest_user> "False" .
+            _:user-112 <restrictions> "" .
+            _:user-112 <verification_status> "DM" .
+            _:user-112 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-112 <is_collaborator> "False" .
+            _:user-112 <is_mshops_user> "False" .
+            _:user-112 <registration_date> "2012-08-01T13:42:54Z" .
+            _:user-112 <decoration_date> "2022-12-24T22:08:52Z" .
+            _:user-112 <dgraph.type> "User" .
+            _:user-112 <id> "user-112" .
+
+            _:user-114 <is_test_user> "False" .
+            _:user-114 <is_collaborator_root> "False" .
+            _:user-114 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-114 <card_types_contagion> "" .
+            _:user-114 <restrictions> "RET_MP" .
+            _:user-114 <verification_status> "PREV_INHAB_PERM" .
+            _:user-114 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-114 <is_collaborator> "False" .
+            _:user-114 <is_mshops_user> "False" .
+            _:user-114 <registration_date> "2012-01-11T20:31:25Z" .
+            _:user-114 <card_types_own> "RED" .
+            _:user-114 <current_verification_status_comment> "[manual][manual_review][dcabral] [SCRIPT] - Projeto de liberação de saldo - Contas com saldo retido há mais de 60 dias - aplicado RET_MP. fechado por script. Aplicado por script RM." .
+            _:user-114 <decoration_date> "2022-06-16T00:56:21Z" .
+            _:user-114 <dgraph.type> "User" .
+            _:user-114 <id> "user-114" .
+
+            _:user-115 <is_collaborator_root> "False" .
+            _:user-115 <restriction_profiles> "FRAUDE" .
+            _:user-115 <is_collaborator> "False" .
+            _:user-115 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-115 <card_types_contagion> "" .
+            _:user-115 <restrictions> "MONEY_OUT_HI" .
+            _:user-115 <verification_status> "NV" .
+            _:user-115 <decoration_date> "2020-02-14T15:56:48" .
+            _:user-115 <dgraph.type> "User" .
+            _:user-115 <id> "user-115" .
+
+            _:user-116 <is_collaborator_root> "False" .
+            _:user-116 <restriction_profiles> "FRAUDE" .
+            _:user-116 <is_collaborator> "False" .
+            _:user-116 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-116 <card_types_contagion> "" .
+            _:user-116 <restrictions> "MONEY_OUT_HI" .
+            _:user-116 <verification_status> "DM" .
+            _:user-116 <decoration_date> "2020-02-14T15:56:49" .
+            _:user-116 <dgraph.type> "User" .
+            _:user-116 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-116 <id> "user-116" .
+
+            _:user-117 <is_test_user> "False" .
+            _:user-117 <is_collaborator_root> "False" .
+            _:user-117 <restriction_profiles> "FRAUDE" .
+            _:user-117 <is_guest_user> "False" .
+            _:user-117 <card_types_contagion> "" .
+            _:user-117 <restrictions> "MONEY_OUT_HI" .
+            _:user-117 <verification_status> "" .
+            _:user-117 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-117 <is_collaborator> "False" .
+            _:user-117 <is_mshops_user> "False" .
+            _:user-117 <registration_date> "2012-01-11T20:31:38Z" .
+            _:user-117 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-117 <decoration_date> "2022-12-30T05:04:19Z" .
+            _:user-117 <dgraph.type> "User" .
+            _:user-117 <id> "user-117" .
+
+            _:user-118 <is_test_user> "False" .
+            _:user-118 <is_collaborator_root> "False" .
+            _:user-118 <restriction_profiles> "" .
+            _:user-118 <is_collaborator> "False" .
+            _:user-118 <registration_date> "2012-01-11T20:32:05Z" .
+            _:user-118 <restrictions> "" .
+            _:user-118 <verification_status> "NV" .
+            _:user-118 <decoration_date> "2022-03-30T06:05:45Z" .
+            _:user-118 <dgraph.type> "User" .
+            _:user-118 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-118 <id> "user-118" .
+
+            _:user-119 <is_test_user> "False" .
+            _:user-119 <is_collaborator_root> "False" .
+            _:user-119 <restriction_profiles> "" .
+            _:user-119 <is_guest_user> "False" .
+            _:user-119 <card_types_contagion> "" .
+            _:user-119 <restrictions> "" .
+            _:user-119 <verification_status> "DM" .
+            _:user-119 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-119 <is_collaborator> "False" .
+            _:user-119 <is_mshops_user> "False" .
+            _:user-119 <registration_date> "2012-01-11T20:32:09Z" .
+            _:user-119 <card_types_own> "" .
+            _:user-119 <decoration_date> "2023-01-11T04:36:34Z" .
+            _:user-119 <dgraph.type> "User" .
+            _:user-119 <id> "user-119" .
+
+            _:user-120 <is_test_user> "False" .
+            _:user-120 <is_collaborator_root> "False" .
+            _:user-120 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-120 <card_types_contagion> "" .
+            _:user-120 <restrictions> "RET_MP" .
+            _:user-120 <verification_status> "PREV_INHAB_PERM" .
+            _:user-120 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-120 <is_collaborator> "False" .
+            _:user-120 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-120 <card_types_own> "RED" .
+            _:user-120 <current_verification_status_comment> "[manual][manual_review][dcabral] [SCRIPT] - Projeto de liberação de saldo - Contas com saldo retido há mais de 60 dias - aplicado RET_MP. fechado por script. Aplicado por script RM." .
+            _:user-120 <decoration_date> "2021-08-12T04:18:04Z" .
+            _:user-120 <dgraph.type> "User" .
+            _:user-120 <id> "user-120" .
+
+            _:user-121 <is_test_user> "False" .
+            _:user-121 <is_collaborator_root> "False" .
+            _:user-121 <restriction_profiles> "" .
+            _:user-121 <is_guest_user> "False" .
+            _:user-121 <restrictions> "" .
+            _:user-121 <verification_status> "DM" .
+            _:user-121 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-121 <is_collaborator> "False" .
+            _:user-121 <is_mshops_user> "False" .
+            _:user-121 <registration_date> "2012-01-11T20:32:13Z" .
+            _:user-121 <decoration_date> "2022-12-28T13:41:31Z" .
+            _:user-121 <dgraph.type> "User" .
+            _:user-121 <id> "user-121" .
+
+            _:user-130 <is_test_user> "False" .
+            _:user-130 <is_collaborator_root> "False" .
+            _:user-130 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-130 <card_types_contagion> "" .
+            _:user-130 <restrictions> "RET_MP" .
+            _:user-130 <verification_status> "PREV_INHAB_PERM" .
+            _:user-130 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-130 <is_collaborator> "False" .
+            _:user-130 <registration_date> "2004-05-03T04:00:00Z" .
+            _:user-130 <card_types_own> "RED" .
+            _:user-130 <current_verification_status_comment> "[manual][manual_review][dcabral] [SCRIPT] - Projeto de liberação de saldo - Contas com saldo retido há mais de 60 dias - aplicado RET_MP. fechado por script. Aplicado por script RM." .
+            _:user-130 <decoration_date> "2021-09-23T22:42:38Z" .
+            _:user-130 <dgraph.type> "User" .
+            _:user-130 <id> "user-130" .
+
+            _:user-140 <is_test_user> "True" .
+            _:user-140 <is_collaborator_root> "False" .
+            _:user-140 <restriction_profiles> "FRAUDE" .
+            _:user-140 <is_collaborator> "False" .
+            _:user-140 <restrictions> "MONEY_OUT_HI" .
+            _:user-140 <verification_status> "DM" .
+            _:user-140 <decoration_date> "2020-05-11T21:38:29" .
+            _:user-140 <dgraph.type> "User" .
+            _:user-140 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-140 <id> "user-140" .
+
+            _:user-141 <is_test_user> "False" .
+            _:user-141 <is_collaborator_root> "False" .
+            _:user-141 <restriction_profiles> "" .
+            _:user-141 <is_guest_user> "False" .
+            _:user-141 <restrictions> "" .
+            _:user-141 <verification_status> "DM" .
+            _:user-141 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-141 <is_collaborator> "False" .
+            _:user-141 <is_mshops_user> "False" .
+            _:user-141 <registration_date> "2012-01-11T20:32:23Z" .
+            _:user-141 <decoration_date> "2023-01-14T21:30:14Z" .
+            _:user-141 <dgraph.type> "User" .
+            _:user-141 <id> "user-141" .
+
+            _:user-142 <is_test_user> "False" .
+            _:user-142 <is_collaborator_root> "False" .
+            _:user-142 <restriction_profiles> "FRAUDE" .
+            _:user-142 <card_types_contagion> "" .
+            _:user-142 <restrictions> "MONEY_OUT_HI" .
+            _:user-142 <verification_status> "DM" .
+            _:user-142 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-142 <is_collaborator> "False" .
+            _:user-142 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-142 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-142 <decoration_date> "2022-04-30T08:49:04Z" .
+            _:user-142 <dgraph.type> "User" .
+            _:user-142 <id> "user-142" .
+
+            _:user-143 <is_test_user> "False" .
+            _:user-143 <is_collaborator_root> "False" .
+            _:user-143 <restriction_profiles> "FRAUDE" .
+            _:user-143 <card_types_contagion> "" .
+            _:user-143 <restrictions> "MONEY_OUT_HI" .
+            _:user-143 <verification_status> "NV" .
+            _:user-143 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-143 <is_collaborator> "False" .
+            _:user-143 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-143 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-143 <decoration_date> "2020-09-02T06:15:15Z" .
+            _:user-143 <dgraph.type> "User" .
+            _:user-143 <id> "user-143" .
+
+            _:user-144 <is_collaborator_root> "False" .
+            _:user-144 <restriction_profiles> "FRAUDE" .
+            _:user-144 <is_collaborator> "False" .
+            _:user-144 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-144 <card_types_contagion> "" .
+            _:user-144 <restrictions> "MONEY_OUT_HI" .
+            _:user-144 <verification_status> "DM" .
+            _:user-144 <decoration_date> "2020-02-14T15:56:59" .
+            _:user-144 <dgraph.type> "User" .
+            _:user-144 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-144 <id> "user-144" .
+
+            _:user-145 <is_test_user> "False" .
+            _:user-145 <is_collaborator_root> "False" .
+            _:user-145 <restriction_profiles> "" .
+            _:user-145 <is_guest_user> "False" .
+            _:user-145 <restrictions> "" .
+            _:user-145 <verification_status> "POI" .
+            _:user-145 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-145 <is_collaborator> "False" .
+            _:user-145 <is_mshops_user> "False" .
+            _:user-145 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-145 <current_verification_status_comment> "[auto][testcrm]Applying POI because user has passed IV Challenge" .
+            _:user-145 <decoration_date> "2023-01-13T03:11:34Z" .
+            _:user-145 <dgraph.type> "User" .
+            _:user-145 <id> "user-145" .
+
+            _:user-146 <is_test_user> "False" .
+            _:user-146 <is_collaborator_root> "False" .
+            _:user-146 <restriction_profiles> "" .
+            _:user-146 <is_guest_user> "False" .
+            _:user-146 <restrictions> "" .
+            _:user-146 <verification_status> "DM" .
+            _:user-146 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-146 <is_collaborator> "False" .
+            _:user-146 <is_mshops_user> "False" .
+            _:user-146 <registration_date> "2012-01-11T20:33:11Z" .
+            _:user-146 <decoration_date> "2022-12-28T18:47:06Z" .
+            _:user-146 <dgraph.type> "User" .
+            _:user-146 <id> "user-146" .
+
+            _:user-147 <is_test_user> "False" .
+            _:user-147 <is_collaborator_root> "False" .
+            _:user-147 <restriction_profiles> "" .
+            _:user-147 <is_collaborator> "False" .
+            _:user-147 <registration_date> "2012-01-11T20:33:23Z" .
+            _:user-147 <restrictions> "" .
+            _:user-147 <verification_status> "DM" .
+            _:user-147 <decoration_date> "2022-03-30T08:04:37Z" .
+            _:user-147 <dgraph.type> "User" .
+            _:user-147 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-147 <id> "user-147" .
+
+            _:user-148 <is_collaborator_root> "False" .
+            _:user-148 <restriction_profiles> "FRAUDE" .
+            _:user-148 <is_collaborator> "False" .
+            _:user-148 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-148 <card_types_contagion> "" .
+            _:user-148 <restrictions> "MONEY_OUT_HI" .
+            _:user-148 <verification_status> "NV" .
+            _:user-148 <decoration_date> "2020-02-14T15:56:59" .
+            _:user-148 <dgraph.type> "User" .
+            _:user-148 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-148 <id> "user-148" .
+
+            _:user-149 <is_test_user> "False" .
+            _:user-149 <is_collaborator_root> "False" .
+            _:user-149 <restriction_profiles> "FRAUDE" .
+            _:user-149 <is_guest_user> "False" .
+            _:user-149 <card_types_contagion> "" .
+            _:user-149 <restrictions> "MONEY_OUT_HI" .
+            _:user-149 <verification_status> "PAUSA_IV" .
+            _:user-149 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-149 <is_collaborator> "False" .
+            _:user-149 <is_mshops_user> "False" .
+            _:user-149 <registration_date> "2012-01-11T20:33:26Z" .
+            _:user-149 <card_types_own> "YELLOW_AUTOREMEDY,RED" .
+            _:user-149 <current_verification_status_comment> "[RESTRICTIONS][AUTO_OFERTAS_BUYER][AUTO_OFERTAS_BUYER][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-149 <decoration_date> "2022-12-13T13:00:53Z" .
+            _:user-149 <dgraph.type> "User" .
+            _:user-149 <id> "user-149" .
+
+            _:user-152 <is_test_user> "False" .
+            _:user-152 <is_collaborator_root> "False" .
+            _:user-152 <restriction_profiles> "" .
+            _:user-152 <is_guest_user> "False" .
+            _:user-152 <restrictions> "" .
+            _:user-152 <verification_status> "DM" .
+            _:user-152 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-152 <is_collaborator> "False" .
+            _:user-152 <is_mshops_user> "False" .
+            _:user-152 <registration_date> "2009-12-23T05:19:08Z" .
+            _:user-152 <decoration_date> "2022-12-17T21:45:30Z" .
+            _:user-152 <dgraph.type> "User" .
+            _:user-152 <id> "user-152" .
+
+            _:user-153 <is_collaborator_root> "False" .
+            _:user-153 <restriction_profiles> "FRAUDE" .
+            _:user-153 <is_collaborator> "False" .
+            _:user-153 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-153 <card_types_contagion> "" .
+            _:user-153 <restrictions> "MONEY_OUT_HI" .
+            _:user-153 <verification_status> "DM" .
+            _:user-153 <decoration_date> "2020-02-14T15:56:59" .
+            _:user-153 <dgraph.type> "User" .
+            _:user-153 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-153 <id> "user-153" .
+
+            _:user-154 <is_collaborator_root> "False" .
+            _:user-154 <restriction_profiles> "FRAUDE" .
+            _:user-154 <is_collaborator> "False" .
+            _:user-154 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-154 <card_types_contagion> "" .
+            _:user-154 <restrictions> "MONEY_OUT_HI" .
+            _:user-154 <verification_status> "NV" .
+            _:user-154 <decoration_date> "2020-02-14T15:56:59" .
+            _:user-154 <dgraph.type> "User" .
+            _:user-154 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-154 <id> "user-154" .
+
+            _:user-155 <dgraph.type> "User" .
+            _:user-155 <id> "user-155" .
+
+            _:user-156 <is_test_user> "False" .
+            _:user-156 <is_collaborator_root> "False" .
+            _:user-156 <restriction_profiles> "FRAUDE" .
+            _:user-156 <card_types_contagion> "" .
+            _:user-156 <restrictions> "MONEY_OUT_HI" .
+            _:user-156 <verification_status> "NV" .
+            _:user-156 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-156 <is_collaborator> "False" .
+            _:user-156 <registration_date> "2009-12-23T05:20:28Z" .
+            _:user-156 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-156 <decoration_date> "2022-03-30T09:21:06Z" .
+            _:user-156 <dgraph.type> "User" .
+            _:user-156 <id> "user-156" .
+
+            _:user-157 <is_collaborator_root> "False" .
+            _:user-157 <restriction_profiles> "FRAUDE" .
+            _:user-157 <is_collaborator> "False" .
+            _:user-157 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-157 <card_types_contagion> "" .
+            _:user-157 <restrictions> "MONEY_OUT_HI" .
+            _:user-157 <verification_status> "NV" .
+            _:user-157 <decoration_date> "2020-02-14T15:56:59" .
+            _:user-157 <dgraph.type> "User" .
+            _:user-157 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-157 <id> "user-157" .
+
+            _:user-158 <is_test_user> "False" .
+            _:user-158 <is_collaborator_root> "False" .
+            _:user-158 <restriction_profiles> "" .
+            _:user-158 <is_collaborator> "False" .
+            _:user-158 <registration_date> "2009-12-23T05:20:39Z" .
+            _:user-158 <restrictions> "" .
+            _:user-158 <verification_status> "EXT" .
+            _:user-158 <decoration_date> "2022-03-30T09:47:12Z" .
+            _:user-158 <dgraph.type> "User" .
+            _:user-158 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-158 <id> "user-158" .
+
+            _:user-159 <is_collaborator_root> "False" .
+            _:user-159 <restriction_profiles> "FRAUDE" .
+            _:user-159 <is_collaborator> "False" .
+            _:user-159 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-159 <card_types_contagion> "" .
+            _:user-159 <restrictions> "MONEY_OUT_HI" .
+            _:user-159 <verification_status> "NV" .
+            _:user-159 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-159 <dgraph.type> "User" .
+            _:user-159 <id> "user-159" .
+
+            _:user-161 <is_test_user> "False" .
+            _:user-161 <is_collaborator_root> "False" .
+            _:user-161 <restriction_profiles> "" .
+            _:user-161 <is_guest_user> "False" .
+            _:user-161 <restrictions> "" .
+            _:user-161 <verification_status> "DM" .
+            _:user-161 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-161 <is_collaborator> "False" .
+            _:user-161 <is_mshops_user> "False" .
+            _:user-161 <registration_date> "2012-01-11T20:33:46Z" .
+            _:user-161 <decoration_date> "2023-01-27T14:37:58Z" .
+            _:user-161 <dgraph.type> "User" .
+            _:user-161 <id> "user-161" .
+
+            _:user-162 <is_test_user> "False" .
+            _:user-162 <is_collaborator_root> "False" .
+            _:user-162 <restriction_profiles> "FRAUDE" .
+            _:user-162 <card_types_contagion> "" .
+            _:user-162 <restrictions> "MONEY_OUT_HI" .
+            _:user-162 <verification_status> "NV" .
+            _:user-162 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-162 <is_collaborator> "False" .
+            _:user-162 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-162 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-162 <decoration_date> "2021-03-01T15:25:41Z" .
+            _:user-162 <dgraph.type> "User" .
+            _:user-162 <id> "user-162" .
+
+            _:user-163 <is_test_user> "False" .
+            _:user-163 <is_collaborator_root> "False" .
+            _:user-163 <restriction_profiles> "" .
+            _:user-163 <is_guest_user> "False" .
+            _:user-163 <restrictions> "" .
+            _:user-163 <verification_status> "DM" .
+            _:user-163 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-163 <is_collaborator> "False" .
+            _:user-163 <is_mshops_user> "False" .
+            _:user-163 <registration_date> "2012-01-11T20:34:08Z" .
+            _:user-163 <decoration_date> "2023-02-01T14:07:15Z" .
+            _:user-163 <dgraph.type> "User" .
+            _:user-163 <id> "user-163" .
+
+            _:user-164 <is_collaborator_root> "False" .
+            _:user-164 <restriction_profiles> "FRAUDE" .
+            _:user-164 <is_collaborator> "False" .
+            _:user-164 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-164 <card_types_contagion> "" .
+            _:user-164 <restrictions> "MONEY_OUT_HI" .
+            _:user-164 <verification_status> "NV" .
+            _:user-164 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-164 <dgraph.type> "User" .
+            _:user-164 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-164 <id> "user-164" .
+
+            _:user-165 <is_test_user> "False" .
+            _:user-165 <is_collaborator_root> "False" .
+            _:user-165 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-165 <card_types_contagion> "" .
+            _:user-165 <restrictions> "RET_MP" .
+            _:user-165 <verification_status> "PREV_INHAB_PERM" .
+            _:user-165 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-165 <is_collaborator> "False" .
+            _:user-165 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-165 <card_types_own> "RED" .
+            _:user-165 <current_verification_status_comment> "[manual][manual_review][dcabral] [SCRIPT] - Projeto de liberação de saldo - Contas com saldo retido há mais de 60 dias - aplicado RET_MP. fechado por script. Aplicado por script RM." .
+            _:user-165 <decoration_date> "2022-03-30T11:15:15Z" .
+            _:user-165 <dgraph.type> "User" .
+            _:user-165 <id> "user-165" .
+
+            _:user-166 <is_test_user> "False" .
+            _:user-166 <is_collaborator_root> "False" .
+            _:user-166 <restriction_profiles> "FRAUDE" .
+            _:user-166 <card_types_contagion> "" .
+            _:user-166 <restrictions> "MONEY_OUT_HI" .
+            _:user-166 <verification_status> "DM" .
+            _:user-166 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-166 <is_collaborator> "False" .
+            _:user-166 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-166 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-166 <decoration_date> "2020-09-30T18:35:40Z" .
+            _:user-166 <dgraph.type> "User" .
+            _:user-166 <id> "user-166" .
+
+            _:user-167 <is_collaborator_root> "False" .
+            _:user-167 <restriction_profiles> "FRAUDE" .
+            _:user-167 <is_collaborator> "False" .
+            _:user-167 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-167 <card_types_contagion> "" .
+            _:user-167 <restrictions> "MONEY_OUT_HI" .
+            _:user-167 <verification_status> "PN" .
+            _:user-167 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-167 <dgraph.type> "User" .
+            _:user-167 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-167 <id> "user-167" .
+
+            _:user-168 <is_collaborator_root> "False" .
+            _:user-168 <restriction_profiles> "FRAUDE" .
+            _:user-168 <is_collaborator> "False" .
+            _:user-168 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-168 <card_types_contagion> "" .
+            _:user-168 <restrictions> "MONEY_OUT_HI" .
+            _:user-168 <verification_status> "NV" .
+            _:user-168 <decoration_date> "2020-02-14T15:57:08" .
+            _:user-168 <dgraph.type> "User" .
+            _:user-168 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-168 <id> "user-168" .
+
+            _:user-169 <is_test_user> "False" .
+            _:user-169 <is_collaborator_root> "False" .
+            _:user-169 <restriction_profiles> "FRAUDE" .
+            _:user-169 <card_types_contagion> "" .
+            _:user-169 <restrictions> "MONEY_OUT_HI" .
+            _:user-169 <verification_status> "NV" .
+            _:user-169 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-169 <is_collaborator> "False" .
+            _:user-169 <registration_date> "2012-01-11T20:34:39Z" .
+            _:user-169 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-169 <decoration_date> "2022-03-30T12:06:15Z" .
+            _:user-169 <dgraph.type> "User" .
+            _:user-169 <id> "user-169" .
+
+            _:user-170 <is_test_user> "False" .
+            _:user-170 <is_collaborator_root> "False" .
+            _:user-170 <restriction_profiles> "FRAUDE" .
+            _:user-170 <card_types_contagion> "" .
+            _:user-170 <restrictions> "MONEY_OUT_HI" .
+            _:user-170 <verification_status> "" .
+            _:user-170 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-170 <is_collaborator> "False" .
+            _:user-170 <registration_date> "2012-01-11T20:34:42Z" .
+            _:user-170 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-170 <decoration_date> "2022-03-30T12:18:26Z" .
+            _:user-170 <dgraph.type> "User" .
+            _:user-170 <id> "user-170" .
+
+            _:user-171 <is_test_user> "False" .
+            _:user-171 <is_collaborator_root> "False" .
+            _:user-171 <restriction_profiles> "FRAUDE" .
+            _:user-171 <is_guest_user> "False" .
+            _:user-171 <card_types_contagion> "" .
+            _:user-171 <restrictions> "MONEY_OUT_HI" .
+            _:user-171 <verification_status> "DM" .
+            _:user-171 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-171 <is_collaborator> "False" .
+            _:user-171 <is_mshops_user> "False" .
+            _:user-171 <registration_date> "2012-01-11T20:34:46Z" .
+            _:user-171 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-171 <decoration_date> "2023-01-30T21:50:39Z" .
+            _:user-171 <dgraph.type> "User" .
+            _:user-171 <id> "user-171" .
+
+            _:user-172 <is_test_user> "False" .
+            _:user-172 <is_collaborator_root> "False" .
+            _:user-172 <restriction_profiles> "" .
+            _:user-172 <is_guest_user> "False" .
+            _:user-172 <card_types_contagion> "" .
+            _:user-172 <restrictions> "" .
+            _:user-172 <verification_status> "DOK" .
+            _:user-172 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-172 <is_collaborator> "False" .
+            _:user-172 <is_mshops_user> "False" .
+            _:user-172 <registration_date> "2012-01-11T20:35:00Z" .
+            _:user-172 <card_types_own> "" .
+            _:user-172 <current_verification_status_comment> "[RESTRICTIONS][mefajardo][ATO][coliving-restrictions] [Usuario con 87 puntos, [usuario desconoce pagos]. , revisión caso cx: si, derivacion es correcta, Usuario sin quiebre de comportamiento. , Acceso desde dispositivo e ip habitual. , No modifica datos. , (MED), tko]" .
+            _:user-172 <decoration_date> "2023-01-25T11:29:15Z" .
+            _:user-172 <dgraph.type> "User" .
+            _:user-172 <id> "user-172" .
+
+            _:user-173 <is_test_user> "False" .
+            _:user-173 <is_collaborator_root> "False" .
+            _:user-173 <restriction_profiles> "FRAUDE" .
+            _:user-173 <card_types_contagion> "" .
+            _:user-173 <restrictions> "MONEY_OUT_HI" .
+            _:user-173 <verification_status> "DM" .
+            _:user-173 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-173 <is_collaborator> "False" .
+            _:user-173 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-173 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-173 <decoration_date> "2022-03-30T12:56:34Z" .
+            _:user-173 <dgraph.type> "User" .
+            _:user-173 <id> "user-173" .
+
+            _:user-174 <is_collaborator_root> "False" .
+            _:user-174 <restriction_profiles> "FRAUDE" .
+            _:user-174 <is_collaborator> "False" .
+            _:user-174 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-174 <card_types_contagion> "" .
+            _:user-174 <restrictions> "MONEY_OUT_HI" .
+            _:user-174 <verification_status> "NV" .
+            _:user-174 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-174 <dgraph.type> "User" .
+            _:user-174 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-174 <id> "user-174" .
+
+            _:user-175 <is_collaborator_root> "False" .
+            _:user-175 <restriction_profiles> "FRAUDE" .
+            _:user-175 <is_collaborator> "False" .
+            _:user-175 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-175 <card_types_contagion> "" .
+            _:user-175 <restrictions> "MONEY_OUT_HI" .
+            _:user-175 <verification_status> "DM" .
+            _:user-175 <decoration_date> "2020-02-14T15:57:08" .
+            _:user-175 <dgraph.type> "User" .
+            _:user-175 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-175 <id> "user-175" .
+
+            _:user-177 <is_collaborator_root> "False" .
+            _:user-177 <restriction_profiles> "FRAUDE" .
+            _:user-177 <is_collaborator> "False" .
+            _:user-177 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-177 <card_types_contagion> "" .
+            _:user-177 <restrictions> "MONEY_OUT_HI" .
+            _:user-177 <verification_status> "NV" .
+            _:user-177 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-177 <dgraph.type> "User" .
+            _:user-177 <id> "user-177" .
+
+            _:user-178 <is_collaborator_root> "False" .
+            _:user-178 <restriction_profiles> "FRAUDE" .
+            _:user-178 <is_collaborator> "False" .
+            _:user-178 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-178 <card_types_contagion> "" .
+            _:user-178 <restrictions> "MONEY_OUT_HI" .
+            _:user-178 <verification_status> "NV" .
+            _:user-178 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-178 <dgraph.type> "User" .
+            _:user-178 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-178 <id> "user-178" .
+
+            _:user-179 <is_test_user> "False" .
+            _:user-179 <is_collaborator_root> "False" .
+            _:user-179 <restriction_profiles> "" .
+            _:user-179 <is_guest_user> "False" .
+            _:user-179 <restrictions> "" .
+            _:user-179 <verification_status> "DM" .
+            _:user-179 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-179 <is_collaborator> "False" .
+            _:user-179 <is_mshops_user> "False" .
+            _:user-179 <registration_date> "2012-05-10T15:09:26Z" .
+            _:user-179 <decoration_date> "2023-01-10T11:51:44Z" .
+            _:user-179 <dgraph.type> "User" .
+            _:user-179 <id> "user-179" .
+
+            _:user-180 <is_collaborator_root> "False" .
+            _:user-180 <restriction_profiles> "FRAUDE" .
+            _:user-180 <is_collaborator> "False" .
+            _:user-180 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-180 <card_types_contagion> "" .
+            _:user-180 <restrictions> "MONEY_OUT_HI" .
+            _:user-180 <verification_status> "NV" .
+            _:user-180 <decoration_date> "2020-02-14T15:57:09" .
+            _:user-180 <dgraph.type> "User" .
+            _:user-180 <id> "user-180" .
+
+            _:user-181 <is_test_user> "False" .
+            _:user-181 <is_collaborator_root> "False" .
+            _:user-181 <restriction_profiles> "" .
+            _:user-181 <is_collaborator> "False" .
+            _:user-181 <registration_date> "2012-01-11T20:36:21Z" .
+            _:user-181 <restrictions> "" .
+            _:user-181 <verification_status> "DM" .
+            _:user-181 <decoration_date> "2022-03-30T15:20:10Z" .
+            _:user-181 <dgraph.type> "User" .
+            _:user-181 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-181 <id> "user-181" .
+
+            _:user-182 <is_test_user> "False" .
+            _:user-182 <is_collaborator_root> "False" .
+            _:user-182 <restriction_profiles> "FRAUDE" .
+            _:user-182 <card_types_contagion> "" .
+            _:user-182 <restrictions> "MONEY_OUT_HI" .
+            _:user-182 <verification_status> "DM" .
+            _:user-182 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-182 <is_collaborator> "False" .
+            _:user-182 <registration_date> "2009-12-23T05:29:56Z" .
+            _:user-182 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-182 <decoration_date> "2022-03-30T15:53:21Z" .
+            _:user-182 <dgraph.type> "User" .
+            _:user-182 <id> "user-182" .
+
+            _:user-183 <is_collaborator_root> "False" .
+            _:user-183 <restriction_profiles> "FRAUDE" .
+            _:user-183 <is_collaborator> "False" .
+            _:user-183 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-183 <card_types_contagion> "" .
+            _:user-183 <restrictions> "MONEY_OUT_HI" .
+            _:user-183 <verification_status> "DM" .
+            _:user-183 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-183 <dgraph.type> "User" .
+            _:user-183 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-183 <id> "user-183" .
+
+            _:user-184 <is_collaborator_root> "False" .
+            _:user-184 <restriction_profiles> "FRAUDE" .
+            _:user-184 <is_collaborator> "False" .
+            _:user-184 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-184 <card_types_contagion> "" .
+            _:user-184 <restrictions> "MONEY_OUT_HI" .
+            _:user-184 <verification_status> "DM" .
+            _:user-184 <decoration_date> "2020-02-14T15:57:18" .
+            _:user-184 <dgraph.type> "User" .
+            _:user-184 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-184 <id> "user-184" .
+
+            _:user-185 <is_test_user> "False" .
+            _:user-185 <is_collaborator_root> "False" .
+            _:user-185 <restriction_profiles> "" .
+            _:user-185 <is_guest_user> "False" .
+            _:user-185 <card_types_contagion> "" .
+            _:user-185 <restrictions> "" .
+            _:user-185 <verification_status> "DOK" .
+            _:user-185 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-185 <is_collaborator> "False" .
+            _:user-185 <is_mshops_user> "False" .
+            _:user-185 <registration_date> "2009-12-23T05:30:48Z" .
+            _:user-185 <card_types_own> "" .
+            _:user-185 <current_verification_status_comment> "[RESTRICTIONS][FONDEO_FRAUDULENTO][FONDEO_FRAUDULENTO][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-185 <decoration_date> "2023-01-30T14:18:54Z" .
+            _:user-185 <dgraph.type> "User" .
+            _:user-185 <id> "user-185" .
+
+            _:user-186 <is_collaborator_root> "False" .
+            _:user-186 <restriction_profiles> "FRAUDE" .
+            _:user-186 <is_collaborator> "False" .
+            _:user-186 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-186 <card_types_contagion> "" .
+            _:user-186 <restrictions> "MONEY_OUT_HI" .
+            _:user-186 <verification_status> "NV" .
+            _:user-186 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-186 <dgraph.type> "User" .
+            _:user-186 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-186 <id> "user-186" .
+
+            _:user-187 <is_collaborator_root> "False" .
+            _:user-187 <restriction_profiles> "FRAUDE" .
+            _:user-187 <is_collaborator> "False" .
+            _:user-187 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-187 <card_types_contagion> "" .
+            _:user-187 <restrictions> "MONEY_OUT_HI" .
+            _:user-187 <verification_status> "NV" .
+            _:user-187 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-187 <dgraph.type> "User" .
+            _:user-187 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-187 <id> "user-187" .
+
+            _:user-188 <is_test_user> "False" .
+            _:user-188 <is_collaborator_root> "False" .
+            _:user-188 <restriction_profiles> "FRAUDE" .
+            _:user-188 <is_guest_user> "False" .
+            _:user-188 <card_types_contagion> "" .
+            _:user-188 <restrictions> "MONEY_OUT_HI" .
+            _:user-188 <verification_status> "NV" .
+            _:user-188 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-188 <is_collaborator> "False" .
+            _:user-188 <is_mshops_user> "False" .
+            _:user-188 <registration_date> "2009-12-23T05:31:12Z" .
+            _:user-188 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-188 <decoration_date> "2022-11-06T18:53:54Z" .
+            _:user-188 <dgraph.type> "User" .
+            _:user-188 <id> "user-188" .
+
+            _:user-189 <is_collaborator_root> "False" .
+            _:user-189 <restriction_profiles> "FRAUDE" .
+            _:user-189 <is_collaborator> "False" .
+            _:user-189 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-189 <card_types_contagion> "" .
+            _:user-189 <restrictions> "MONEY_OUT_HI" .
+            _:user-189 <verification_status> "DM" .
+            _:user-189 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-189 <dgraph.type> "User" .
+            _:user-189 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-189 <id> "user-189" .
+
+            _:user-190 <is_collaborator_root> "False" .
+            _:user-190 <restriction_profiles> "FRAUDE" .
+            _:user-190 <is_collaborator> "False" .
+            _:user-190 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-190 <card_types_contagion> "" .
+            _:user-190 <restrictions> "MONEY_OUT_HI" .
+            _:user-190 <verification_status> "EXT" .
+            _:user-190 <decoration_date> "2020-02-14T15:57:18" .
+            _:user-190 <dgraph.type> "User" .
+            _:user-190 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-190 <id> "user-190" .
+
+            _:user-191 <is_collaborator_root> "False" .
+            _:user-191 <restriction_profiles> "FRAUDE" .
+            _:user-191 <is_collaborator> "False" .
+            _:user-191 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-191 <card_types_contagion> "" .
+            _:user-191 <restrictions> "MONEY_OUT_HI" .
+            _:user-191 <verification_status> "PN" .
+            _:user-191 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-191 <dgraph.type> "User" .
+            _:user-191 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-191 <id> "user-191" .
+
+            _:user-192 <is_test_user> "False" .
+            _:user-192 <is_collaborator_root> "False" .
+            _:user-192 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-192 <is_guest_user> "False" .
+            _:user-192 <card_types_contagion> "" .
+            _:user-192 <restrictions> "RET_MP" .
+            _:user-192 <verification_status> "DUP_PERM" .
+            _:user-192 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-192 <is_collaborator> "False" .
+            _:user-192 <is_mshops_user> "False" .
+            _:user-192 <registration_date> "2009-12-23T05:32:16Z" .
+            _:user-192 <card_types_own> "RED" .
+            _:user-192 <current_verification_status_comment> "Prev. Se cruza por ck, tel y apellido con 29346155 en DUP_PERM. Ppal 53756694 en VENDCONT. No habilitar." .
+            _:user-192 <decoration_date> "2022-12-28T15:22:29Z" .
+            _:user-192 <dgraph.type> "User" .
+            _:user-192 <id> "user-192" .
+
+            _:user-193 <is_collaborator_root> "False" .
+            _:user-193 <restriction_profiles> "FRAUDE" .
+            _:user-193 <is_collaborator> "False" .
+            _:user-193 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-193 <card_types_contagion> "" .
+            _:user-193 <restrictions> "MONEY_OUT_HI" .
+            _:user-193 <verification_status> "NV" .
+            _:user-193 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-193 <dgraph.type> "User" .
+            _:user-193 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-193 <id> "user-193" .
+
+            _:user-194 <is_collaborator_root> "False" .
+            _:user-194 <restriction_profiles> "FRAUDE" .
+            _:user-194 <is_collaborator> "False" .
+            _:user-194 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-194 <card_types_contagion> "" .
+            _:user-194 <restrictions> "MONEY_OUT_HI" .
+            _:user-194 <verification_status> "NV" .
+            _:user-194 <decoration_date> "2020-02-14T15:57:19" .
+            _:user-194 <dgraph.type> "User" .
+            _:user-194 <id> "user-194" .
+
+            _:user-195 <is_collaborator_root> "False" .
+            _:user-195 <restriction_profiles> "FRAUDE" .
+            _:user-195 <is_collaborator> "False" .
+            _:user-195 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-195 <card_types_contagion> "" .
+            _:user-195 <restrictions> "MONEY_OUT_HI" .
+            _:user-195 <verification_status> "NV" .
+            _:user-195 <decoration_date> "2020-02-14T15:57:18" .
+            _:user-195 <dgraph.type> "User" .
+            _:user-195 <id> "user-195" .
+
+            _:user-197 <is_collaborator_root> "False" .
+            _:user-197 <restriction_profiles> "FRAUDE" .
+            _:user-197 <is_collaborator> "False" .
+            _:user-197 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-197 <card_types_contagion> "" .
+            _:user-197 <restrictions> "MONEY_OUT_HI" .
+            _:user-197 <verification_status> "DM" .
+            _:user-197 <decoration_date> "2020-02-14T15:57:18" .
+            _:user-197 <dgraph.type> "User" .
+            _:user-197 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-197 <id> "user-197" .
+
+            _:user-198 <is_test_user> "False" .
+            _:user-198 <is_collaborator_root> "False" .
+            _:user-198 <restriction_profiles> "FRAUDE" .
+            _:user-198 <is_guest_user> "False" .
+            _:user-198 <card_types_contagion> "" .
+            _:user-198 <restrictions> "MONEY_OUT_HI" .
+            _:user-198 <verification_status> "DM" .
+            _:user-198 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-198 <is_collaborator> "False" .
+            _:user-198 <is_mshops_user> "False" .
+            _:user-198 <registration_date> "2009-12-23T05:32:30Z" .
+            _:user-198 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-198 <decoration_date> "2022-09-29T16:29:28Z" .
+            _:user-198 <dgraph.type> "User" .
+            _:user-198 <id> "user-198" .
+
+            _:user-199 <is_test_user> "False" .
+            _:user-199 <is_collaborator_root> "False" .
+            _:user-199 <restriction_profiles> "FRAUDE" .
+            _:user-199 <is_guest_user> "False" .
+            _:user-199 <card_types_contagion> "" .
+            _:user-199 <restrictions> "MONEY_OUT_HI" .
+            _:user-199 <verification_status> "DM" .
+            _:user-199 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-199 <is_collaborator> "False" .
+            _:user-199 <is_mshops_user> "False" .
+            _:user-199 <registration_date> "2009-12-23T05:32:53Z" .
+            _:user-199 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-199 <decoration_date> "2022-11-10T19:58:58Z" .
+            _:user-199 <dgraph.type> "User" .
+            _:user-199 <id> "user-199" .
+
+            _:user-200 <is_test_user> "False" .
+            _:user-200 <is_collaborator_root> "False" .
+            _:user-200 <restriction_profiles> "FRAUDE" .
+            _:user-200 <is_collaborator> "False" .
+            _:user-200 <registration_date> "2009-12-23T05:33:24Z" .
+            _:user-200 <restrictions> "MONEY_OUT_HI" .
+            _:user-200 <verification_status> "DM" .
+            _:user-200 <decoration_date> "2022-05-26T19:14:44Z" .
+            _:user-200 <dgraph.type> "User" .
+            _:user-200 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-200 <id> "user-200" .
+
+            _:user-201 <is_test_user> "False" .
+            _:user-201 <is_collaborator_root> "False" .
+            _:user-201 <restriction_profiles> "FRAUDE" .
+            _:user-201 <card_types_contagion> "" .
+            _:user-201 <restrictions> "MONEY_OUT_HI" .
+            _:user-201 <verification_status> "DM" .
+            _:user-201 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-201 <is_collaborator> "False" .
+            _:user-201 <is_mshops_user> "False" .
+            _:user-201 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-201 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-201 <decoration_date> "2022-06-13T20:39:10Z" .
+            _:user-201 <dgraph.type> "User" .
+            _:user-201 <id> "user-201" .
+
+            _:user-202 <is_test_user> "False" .
+            _:user-202 <is_collaborator_root> "False" .
+            _:user-202 <restriction_profiles> "FRAUDE" .
+            _:user-202 <card_types_contagion> "" .
+            _:user-202 <restrictions> "MONEY_OUT_HI" .
+            _:user-202 <verification_status> "PN" .
+            _:user-202 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-202 <is_collaborator> "False" .
+            _:user-202 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-202 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-202 <current_verification_status_comment> "[MANUAL][gestol]Aplicacion de mavisa de PN por inconsistencia retroactiva" .
+            _:user-202 <decoration_date> "2022-05-26T19:26:27Z" .
+            _:user-202 <dgraph.type> "User" .
+            _:user-202 <id> "user-202" .
+
+            _:user-203 <is_test_user> "False" .
+            _:user-203 <is_collaborator_root> "False" .
+            _:user-203 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-203 <card_types_contagion> "" .
+            _:user-203 <restrictions> "RET_MP" .
+            _:user-203 <verification_status> "PREV_INHAB_PERM" .
+            _:user-203 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-203 <is_collaborator> "False" .
+            _:user-203 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-203 <card_types_own> "RED" .
+            _:user-203 <current_verification_status_comment> "[manual][manual_review][dcabral] [SCRIPT] - Projeto de liberação de saldo - Contas com saldo retido há mais de 60 dias - aplicado RET_MP. fechado por script. Aplicado por script RM." .
+            _:user-203 <decoration_date> "2022-05-26T19:26:31Z" .
+            _:user-203 <dgraph.type> "User" .
+            _:user-203 <id> "user-203" .
+
+            _:user-204 <is_test_user> "False" .
+            _:user-204 <is_collaborator_root> "False" .
+            _:user-204 <restriction_profiles> "SOLO_RETIRO_MP" .
+            _:user-204 <card_types_contagion> "" .
+            _:user-204 <restrictions> "RET_MP" .
+            _:user-204 <verification_status> "NV" .
+            _:user-204 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-204 <is_collaborator> "False" .
+            _:user-204 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-204 <card_types_own> "RED" .
+            _:user-204 <decoration_date> "2022-05-26T19:26:33Z" .
+            _:user-204 <dgraph.type> "User" .
+            _:user-204 <id> "user-204" .
+
+            _:user-205 <is_test_user> "False" .
+            _:user-205 <is_collaborator_root> "False" .
+            _:user-205 <restriction_profiles> "FRAUDE" .
+            _:user-205 <card_types_contagion> "" .
+            _:user-205 <restrictions> "MONEY_OUT_HI" .
+            _:user-205 <verification_status> "DM" .
+            _:user-205 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-205 <is_collaborator> "False" .
+            _:user-205 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-205 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-205 <decoration_date> "2022-05-26T19:26:36Z" .
+            _:user-205 <dgraph.type> "User" .
+            _:user-205 <id> "user-205" .
+
+            _:user-206 <is_test_user> "False" .
+            _:user-206 <is_collaborator_root> "False" .
+            _:user-206 <restriction_profiles> "FRAUDE" .
+            _:user-206 <card_types_contagion> "" .
+            _:user-206 <restrictions> "MONEY_OUT_HI" .
+            _:user-206 <verification_status> "DM" .
+            _:user-206 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-206 <is_collaborator> "False" .
+            _:user-206 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-206 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-206 <decoration_date> "2022-05-26T19:26:39Z" .
+            _:user-206 <dgraph.type> "User" .
+            _:user-206 <id> "user-206" .
+
+            _:user-207 <is_test_user> "False" .
+            _:user-207 <is_collaborator_root> "False" .
+            _:user-207 <restriction_profiles> "FRAUDE" .
+            _:user-207 <card_types_contagion> "" .
+            _:user-207 <restrictions> "MONEY_OUT_HI" .
+            _:user-207 <verification_status> "NV" .
+            _:user-207 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-207 <is_collaborator> "False" .
+            _:user-207 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-207 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-207 <decoration_date> "2022-05-26T19:26:43Z" .
+            _:user-207 <dgraph.type> "User" .
+            _:user-207 <id> "user-207" .
+
+            _:user-208 <is_collaborator_root> "False" .
+            _:user-208 <restriction_profiles> "FRAUDE" .
+            _:user-208 <is_collaborator> "False" .
+            _:user-208 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-208 <card_types_contagion> "" .
+            _:user-208 <restrictions> "MONEY_OUT_HI" .
+            _:user-208 <verification_status> "DM" .
+            _:user-208 <decoration_date> "2020-02-14T15:57:28" .
+            _:user-208 <dgraph.type> "User" .
+            _:user-208 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-208 <id> "user-208" .
+
+            _:user-209 <is_collaborator_root> "False" .
+            _:user-209 <restriction_profiles> "FRAUDE" .
+            _:user-209 <is_collaborator> "False" .
+            _:user-209 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-209 <card_types_contagion> "" .
+            _:user-209 <restrictions> "MONEY_OUT_HI" .
+            _:user-209 <verification_status> "DM" .
+            _:user-209 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-209 <dgraph.type> "User" .
+            _:user-209 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-209 <id> "user-209" .
+
+            _:user-210 <is_collaborator_root> "False" .
+            _:user-210 <restriction_profiles> "FRAUDE" .
+            _:user-210 <is_collaborator> "False" .
+            _:user-210 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-210 <card_types_contagion> "" .
+            _:user-210 <restrictions> "MONEY_OUT_HI" .
+            _:user-210 <verification_status> "DOCI" .
+            _:user-210 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-210 <dgraph.type> "User" .
+            _:user-210 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-210 <id> "user-210" .
+
+            _:user-212 <is_collaborator_root> "False" .
+            _:user-212 <restriction_profiles> "FRAUDE" .
+            _:user-212 <is_collaborator> "False" .
+            _:user-212 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-212 <card_types_contagion> "" .
+            _:user-212 <restrictions> "MONEY_OUT_HI" .
+            _:user-212 <verification_status> "NV" .
+            _:user-212 <decoration_date> "2020-02-14T15:57:28" .
+            _:user-212 <dgraph.type> "User" .
+            _:user-212 <id> "user-212" .
+
+            _:user-213 <is_collaborator_root> "False" .
+            _:user-213 <restriction_profiles> "FRAUDE" .
+            _:user-213 <is_collaborator> "False" .
+            _:user-213 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-213 <card_types_contagion> "" .
+            _:user-213 <restrictions> "MONEY_OUT_HI" .
+            _:user-213 <verification_status> "NV" .
+            _:user-213 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-213 <dgraph.type> "User" .
+            _:user-213 <id> "user-213" .
+
+            _:user-214 <is_test_user> "False" .
+            _:user-214 <is_collaborator_root> "False" .
+            _:user-214 <restriction_profiles> "" .
+            _:user-214 <is_guest_user> "False" .
+            _:user-214 <restrictions> "" .
+            _:user-214 <verification_status> "DM" .
+            _:user-214 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-214 <is_collaborator> "False" .
+            _:user-214 <is_mshops_user> "False" .
+            _:user-214 <registration_date> "2012-01-11T20:38:48Z" .
+            _:user-214 <decoration_date> "2023-01-19T13:31:14Z" .
+            _:user-214 <dgraph.type> "User" .
+            _:user-214 <id> "user-214" .
+
+            _:user-216 <is_collaborator_root> "False" .
+            _:user-216 <restriction_profiles> "FRAUDE" .
+            _:user-216 <is_collaborator> "False" .
+            _:user-216 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-216 <card_types_contagion> "" .
+            _:user-216 <restrictions> "MONEY_OUT_HI" .
+            _:user-216 <verification_status> "NV" .
+            _:user-216 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-216 <dgraph.type> "User" .
+            _:user-216 <id> "user-216" .
+
+            _:user-217 <is_collaborator_root> "False" .
+            _:user-217 <restriction_profiles> "FRAUDE" .
+            _:user-217 <is_collaborator> "False" .
+            _:user-217 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-217 <card_types_contagion> "" .
+            _:user-217 <restrictions> "MONEY_OUT_HI" .
+            _:user-217 <verification_status> "NV" .
+            _:user-217 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-217 <dgraph.type> "User" .
+            _:user-217 <id> "user-217" .
+
+            _:user-218 <is_collaborator_root> "False" .
+            _:user-218 <restriction_profiles> "FRAUDE" .
+            _:user-218 <is_collaborator> "False" .
+            _:user-218 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-218 <card_types_contagion> "" .
+            _:user-218 <restrictions> "MONEY_OUT_HI" .
+            _:user-218 <verification_status> "DM" .
+            _:user-218 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-218 <dgraph.type> "User" .
+            _:user-218 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-218 <id> "user-218" .
+
+            _:user-219 <is_collaborator_root> "False" .
+            _:user-219 <restriction_profiles> "FRAUDE" .
+            _:user-219 <is_collaborator> "False" .
+            _:user-219 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-219 <card_types_contagion> "" .
+            _:user-219 <restrictions> "MONEY_OUT_HI" .
+            _:user-219 <verification_status> "NV" .
+            _:user-219 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-219 <dgraph.type> "User" .
+            _:user-219 <id> "user-219" .
+
+            _:user-220 <is_collaborator_root> "False" .
+            _:user-220 <restriction_profiles> "FRAUDE" .
+            _:user-220 <is_collaborator> "False" .
+            _:user-220 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-220 <card_types_contagion> "" .
+            _:user-220 <restrictions> "MONEY_OUT_HI" .
+            _:user-220 <verification_status> "DOCI" .
+            _:user-220 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-220 <dgraph.type> "User" .
+            _:user-220 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-220 <id> "user-220" .
+
+            _:user-221 <is_collaborator_root> "False" .
+            _:user-221 <restriction_profiles> "FRAUDE" .
+            _:user-221 <is_collaborator> "False" .
+            _:user-221 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-221 <card_types_contagion> "" .
+            _:user-221 <restrictions> "MONEY_OUT_HI" .
+            _:user-221 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-221 <dgraph.type> "User" .
+            _:user-221 <id> "user-221" .
+
+            _:user-222 <is_collaborator_root> "False" .
+            _:user-222 <restriction_profiles> "FRAUDE" .
+            _:user-222 <is_collaborator> "False" .
+            _:user-222 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-222 <card_types_contagion> "" .
+            _:user-222 <restrictions> "MONEY_OUT_HI" .
+            _:user-222 <verification_status> "NV" .
+            _:user-222 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-222 <dgraph.type> "User" .
+            _:user-222 <id> "user-222" .
+
+            _:user-224 <is_collaborator_root> "False" .
+            _:user-224 <restriction_profiles> "FRAUDE" .
+            _:user-224 <is_collaborator> "False" .
+            _:user-224 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-224 <card_types_contagion> "" .
+            _:user-224 <restrictions> "MONEY_OUT_HI" .
+            _:user-224 <verification_status> "NV" .
+            _:user-224 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-224 <dgraph.type> "User" .
+            _:user-224 <id> "user-224" .
+
+            _:user-225 <is_collaborator_root> "False" .
+            _:user-225 <restriction_profiles> "FRAUDE" .
+            _:user-225 <is_collaborator> "False" .
+            _:user-225 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-225 <card_types_contagion> "" .
+            _:user-225 <restrictions> "MONEY_OUT_HI" .
+            _:user-225 <verification_status> "NV" .
+            _:user-225 <decoration_date> "2020-02-14T15:57:29" .
+            _:user-225 <dgraph.type> "User" .
+            _:user-225 <id> "user-225" .
+
+            _:user-226 <is_test_user> "False" .
+            _:user-226 <is_collaborator_root> "False" .
+            _:user-226 <restriction_profiles> "" .
+            _:user-226 <is_collaborator> "False" .
+            _:user-226 <registration_date> "2012-01-11T20:41:03Z" .
+            _:user-226 <restrictions> "" .
+            _:user-226 <verification_status> "DM" .
+            _:user-226 <decoration_date> "2022-03-31T04:27:04Z" .
+            _:user-226 <dgraph.type> "User" .
+            _:user-226 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-226 <id> "user-226" .
+
+            _:user-228 <is_test_user> "False" .
+            _:user-228 <is_collaborator_root> "False" .
+            _:user-228 <restriction_profiles> "FRAUDE" .
+            _:user-228 <is_guest_user> "False" .
+            _:user-228 <card_types_contagion> "" .
+            _:user-228 <restrictions> "MONEY_OUT_HI" .
+            _:user-228 <verification_status> "" .
+            _:user-228 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-228 <is_collaborator> "False" .
+            _:user-228 <is_mshops_user> "False" .
+            _:user-228 <registration_date> "2012-01-11T20:41:52Z" .
+            _:user-228 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-228 <decoration_date> "2023-01-22T19:21:23Z" .
+            _:user-228 <dgraph.type> "User" .
+            _:user-228 <id> "user-228" .
+
+            _:user-229 <is_test_user> "False" .
+            _:user-229 <is_collaborator_root> "False" .
+            _:user-229 <restriction_profiles> "" .
+            _:user-229 <is_guest_user> "False" .
+            _:user-229 <restrictions> "" .
+            _:user-229 <verification_status> "" .
+            _:user-229 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-229 <is_collaborator> "False" .
+            _:user-229 <is_mshops_user> "False" .
+            _:user-229 <registration_date> "2019-11-17T21:27:39Z" .
+            _:user-229 <decoration_date> "2023-01-18T19:20:13Z" .
+            _:user-229 <dgraph.type> "User" .
+            _:user-229 <id> "user-229" .
+
+            _:user-230 <is_collaborator_root> "False" .
+            _:user-230 <restriction_profiles> "FRAUDE" .
+            _:user-230 <is_collaborator> "False" .
+            _:user-230 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-230 <card_types_contagion> "" .
+            _:user-230 <restrictions> "MONEY_OUT_HI" .
+            _:user-230 <verification_status> "NV" .
+            _:user-230 <decoration_date> "2020-02-14T15:57:39" .
+            _:user-230 <dgraph.type> "User" .
+            _:user-230 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-230 <id> "user-230" .
+
+            _:user-231 <is_collaborator_root> "False" .
+            _:user-231 <restriction_profiles> "FRAUDE" .
+            _:user-231 <is_collaborator> "False" .
+            _:user-231 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-231 <card_types_contagion> "" .
+            _:user-231 <restrictions> "MONEY_OUT_HI" .
+            _:user-231 <verification_status> "NV" .
+            _:user-231 <decoration_date> "2020-02-14T15:57:38" .
+            _:user-231 <dgraph.type> "User" .
+            _:user-231 <id> "user-231" .
+
+            _:user-232 <is_collaborator_root> "False" .
+            _:user-232 <restriction_profiles> "FRAUDE" .
+            _:user-232 <is_collaborator> "False" .
+            _:user-232 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-232 <card_types_contagion> "" .
+            _:user-232 <restrictions> "MONEY_OUT_HI" .
+            _:user-232 <verification_status> "NV" .
+            _:user-232 <decoration_date> "2020-02-14T15:57:38" .
+            _:user-232 <dgraph.type> "User" .
+            _:user-232 <id> "user-232" .
+
+            _:user-233 <is_test_user> "False" .
+            _:user-233 <is_collaborator_root> "False" .
+            _:user-233 <restriction_profiles> "" .
+            _:user-233 <is_guest_user> "False" .
+            _:user-233 <restrictions> "" .
+            _:user-233 <verification_status> "DM" .
+            _:user-233 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-233 <is_collaborator> "False" .
+            _:user-233 <is_mshops_user> "False" .
+            _:user-233 <registration_date> "2012-01-11T20:42:20Z" .
+            _:user-233 <decoration_date> "2023-01-19T22:37:47Z" .
+            _:user-233 <dgraph.type> "User" .
+            _:user-233 <id> "user-233" .
+
+            _:user-234 <is_collaborator_root> "False" .
+            _:user-234 <restriction_profiles> "FRAUDE" .
+            _:user-234 <is_collaborator> "False" .
+            _:user-234 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-234 <card_types_contagion> "" .
+            _:user-234 <restrictions> "MONEY_OUT_HI" .
+            _:user-234 <verification_status> "DM" .
+            _:user-234 <decoration_date> "2020-02-14T15:57:38" .
+            _:user-234 <dgraph.type> "User" .
+            _:user-234 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-234 <id> "user-234" .
+
+            _:user-235 <is_test_user> "False" .
+            _:user-235 <is_collaborator_root> "False" .
+            _:user-235 <restriction_profiles> "FRAUDE" .
+            _:user-235 <card_types_contagion> "" .
+            _:user-235 <restrictions> "MONEY_OUT_HI" .
+            _:user-235 <verification_status> "NV" .
+            _:user-235 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-235 <is_collaborator> "False" .
+            _:user-235 <registration_date> "2012-01-11T20:42:58Z" .
+            _:user-235 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-235 <decoration_date> "2022-05-29T00:52:26Z" .
+            _:user-235 <dgraph.type> "User" .
+            _:user-235 <id> "user-235" .
+
+            _:user-236 <is_test_user> "False" .
+            _:user-236 <is_collaborator_root> "False" .
+            _:user-236 <restriction_profiles> "" .
+            _:user-236 <is_guest_user> "False" .
+            _:user-236 <restrictions> "" .
+            _:user-236 <verification_status> "DOK" .
+            _:user-236 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-236 <is_collaborator> "False" .
+            _:user-236 <is_mshops_user> "False" .
+            _:user-236 <registration_date> "2012-01-12T06:30:14Z" .
+            _:user-236 <current_verification_status_comment> "[MREVIEW-MS][imilesi] Usuario de 87 puntos, sin cruces de riesgo, no valida IC, historico positvo, no recibe reclamo ni denuncia de riesgo. Rehabilito " .
+            _:user-236 <decoration_date> "2023-01-19T15:26:45Z" .
+            _:user-236 <dgraph.type> "User" .
+            _:user-236 <id> "user-236" .
+
+            _:user-237 <is_collaborator_root> "False" .
+            _:user-237 <restriction_profiles> "FRAUDE" .
+            _:user-237 <is_collaborator> "False" .
+            _:user-237 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-237 <card_types_contagion> "" .
+            _:user-237 <restrictions> "MONEY_OUT_HI" .
+            _:user-237 <verification_status> "NV" .
+            _:user-237 <decoration_date> "2020-02-14T15:57:39" .
+            _:user-237 <dgraph.type> "User" .
+            _:user-237 <id> "user-237" .
+
+            _:user-238 <is_test_user> "False" .
+            _:user-238 <is_collaborator_root> "False" .
+            _:user-238 <restriction_profiles> "" .
+            _:user-238 <is_guest_user> "False" .
+            _:user-238 <restrictions> "" .
+            _:user-238 <verification_status> "DM" .
+            _:user-238 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-238 <is_collaborator> "False" .
+            _:user-238 <is_mshops_user> "False" .
+            _:user-238 <registration_date> "2012-01-11T20:44:00Z" .
+            _:user-238 <decoration_date> "2023-01-04T18:01:39Z" .
+            _:user-238 <dgraph.type> "User" .
+            _:user-238 <id> "user-238" .
+
+            _:user-239 <is_test_user> "False" .
+            _:user-239 <is_collaborator_root> "False" .
+            _:user-239 <restriction_profiles> "" .
+            _:user-239 <is_collaborator> "False" .
+            _:user-239 <registration_date> "2012-01-11T20:45:55Z" .
+            _:user-239 <restrictions> "" .
+            _:user-239 <verification_status> "" .
+            _:user-239 <decoration_date> "2022-03-31T05:39:45Z" .
+            _:user-239 <dgraph.type> "User" .
+            _:user-239 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-239 <id> "user-239" .
+
+            _:user-240 <is_test_user> "False" .
+            _:user-240 <is_collaborator_root> "False" .
+            _:user-240 <restriction_profiles> "" .
+            _:user-240 <is_guest_user> "False" .
+            _:user-240 <restrictions> "" .
+            _:user-240 <verification_status> "DM" .
+            _:user-240 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-240 <is_collaborator> "False" .
+            _:user-240 <is_mshops_user> "False" .
+            _:user-240 <registration_date> "2012-01-11T20:46:12Z" .
+            _:user-240 <decoration_date> "2023-01-20T15:53:10Z" .
+            _:user-240 <dgraph.type> "User" .
+            _:user-240 <id> "user-240" .
+
+            _:user-242 <is_test_user> "False" .
+            _:user-242 <is_collaborator_root> "False" .
+            _:user-242 <restriction_profiles> "" .
+            _:user-242 <is_collaborator> "False" .
+            _:user-242 <registration_date> "2012-01-11T20:39:54Z" .
+            _:user-242 <restrictions> "" .
+            _:user-242 <verification_status> "DM" .
+            _:user-242 <decoration_date> "2021-12-23T19:07:26Z" .
+            _:user-242 <dgraph.type> "User" .
+            _:user-242 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-242 <id> "user-242" .
+
+            _:user-244 <is_test_user> "False" .
+            _:user-244 <is_collaborator_root> "False" .
+            _:user-244 <restriction_profiles> "" .
+            _:user-244 <is_guest_user> "False" .
+            _:user-244 <restrictions> "" .
+            _:user-244 <verification_status> "DOK" .
+            _:user-244 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-244 <is_collaborator> "False" .
+            _:user-244 <is_mshops_user> "False" .
+            _:user-244 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-244 <current_verification_status_comment> "[auto][testcrm]Applying DOK because user has passed IV Challenge" .
+            _:user-244 <decoration_date> "2023-01-01T01:32:19Z" .
+            _:user-244 <dgraph.type> "User" .
+            _:user-244 <id> "user-244" .
+
+            _:user-246 <is_test_user> "False" .
+            _:user-246 <is_collaborator_root> "False" .
+            _:user-246 <restriction_profiles> "" .
+            _:user-246 <is_guest_user> "False" .
+            _:user-246 <restrictions> "" .
+            _:user-246 <verification_status> "DM" .
+            _:user-246 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-246 <is_collaborator> "False" .
+            _:user-246 <is_mshops_user> "False" .
+            _:user-246 <registration_date> "2012-01-11T20:40:45Z" .
+            _:user-246 <decoration_date> "2022-12-31T23:47:58Z" .
+            _:user-246 <dgraph.type> "User" .
+            _:user-246 <id> "user-246" .
+
+            _:user-247 <is_test_user> "False" .
+            _:user-247 <is_collaborator_root> "False" .
+            _:user-247 <restriction_profiles> "" .
+            _:user-247 <is_guest_user> "False" .
+            _:user-247 <restrictions> "" .
+            _:user-247 <verification_status> "DM" .
+            _:user-247 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-247 <is_collaborator> "False" .
+            _:user-247 <is_mshops_user> "False" .
+            _:user-247 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-247 <decoration_date> "2023-01-14T00:30:11Z" .
+            _:user-247 <dgraph.type> "User" .
+            _:user-247 <id> "user-247" .
+
+            _:user-249 <is_test_user> "False" .
+            _:user-249 <is_collaborator_root> "False" .
+            _:user-249 <restriction_profiles> "" .
+            _:user-249 <is_guest_user> "False" .
+            _:user-249 <restrictions> "" .
+            _:user-249 <verification_status> "DM" .
+            _:user-249 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-249 <is_collaborator> "False" .
+            _:user-249 <is_mshops_user> "False" .
+            _:user-249 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-249 <decoration_date> "2022-11-13T01:00:44Z" .
+            _:user-249 <dgraph.type> "User" .
+            _:user-249 <id> "user-249" .
+
+            _:user-255 <is_test_user> "False" .
+            _:user-255 <registration_date> "2012-01-11T15:41:43Z" .
+            _:user-255 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-255 <card_types_contagion> "" .
+            _:user-255 <dgraph.type> "User" .
+            _:user-255 <id> "user-255" .
+
+            _:user-256 <is_test_user> "False" .
+            _:user-256 <is_collaborator_root> "False" .
+            _:user-256 <restriction_profiles> "" .
+            _:user-256 <is_guest_user> "False" .
+            _:user-256 <restrictions> "" .
+            _:user-256 <verification_status> "POCF" .
+            _:user-256 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-256 <is_collaborator> "False" .
+            _:user-256 <is_mshops_user> "False" .
+            _:user-256 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-256 <current_verification_status_comment> "[null][KYC DDFF] Upgrade de cuenta en MLM; se le aplica POCF." .
+            _:user-256 <decoration_date> "2023-01-25T21:31:33Z" .
+            _:user-256 <dgraph.type> "User" .
+            _:user-256 <id> "user-256" .
+
+            _:user-257 <is_test_user> "False" .
+            _:user-257 <is_collaborator_root> "False" .
+            _:user-257 <restriction_profiles> "" .
+            _:user-257 <is_guest_user> "False" .
+            _:user-257 <restrictions> "" .
+            _:user-257 <verification_status> "DM" .
+            _:user-257 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-257 <is_collaborator> "False" .
+            _:user-257 <is_mshops_user> "False" .
+            _:user-257 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-257 <decoration_date> "2023-01-11T19:19:14Z" .
+            _:user-257 <dgraph.type> "User" .
+            _:user-257 <id> "user-257" .
+
+            _:user-270 <is_test_user> "False" .
+            _:user-270 <is_collaborator_root> "False" .
+            _:user-270 <restriction_profiles> "" .
+            _:user-270 <is_guest_user> "False" .
+            _:user-270 <restrictions> "" .
+            _:user-270 <verification_status> "DM" .
+            _:user-270 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-270 <is_collaborator> "False" .
+            _:user-270 <is_mshops_user> "False" .
+            _:user-270 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-270 <decoration_date> "2023-01-12T06:56:24Z" .
+            _:user-270 <dgraph.type> "User" .
+            _:user-270 <id> "user-270" .
+
+            _:user-273 <is_test_user> "False" .
+            _:user-273 <is_collaborator_root> "False" .
+            _:user-273 <restriction_profiles> "" .
+            _:user-273 <is_guest_user> "False" .
+            _:user-273 <restrictions> "" .
+            _:user-273 <verification_status> "DM" .
+            _:user-273 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-273 <is_collaborator> "False" .
+            _:user-273 <is_mshops_user> "False" .
+            _:user-273 <registration_date> "2012-01-11T20:44:57Z" .
+            _:user-273 <decoration_date> "2022-09-06T13:30:00Z" .
+            _:user-273 <dgraph.type> "User" .
+            _:user-273 <id> "user-273" .
+
+            _:user-281 <is_test_user> "False" .
+            _:user-281 <is_collaborator_root> "False" .
+            _:user-281 <restriction_profiles> "" .
+            _:user-281 <is_guest_user> "False" .
+            _:user-281 <restrictions> "" .
+            _:user-281 <verification_status> "DM" .
+            _:user-281 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-281 <is_collaborator> "False" .
+            _:user-281 <is_mshops_user> "False" .
+            _:user-281 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-281 <decoration_date> "2023-01-12T12:06:20Z" .
+            _:user-281 <dgraph.type> "User" .
+            _:user-281 <id> "user-281" .
+
+            _:user-283 <is_test_user> "False" .
+            _:user-283 <is_collaborator_root> "False" .
+            _:user-283 <restriction_profiles> "" .
+            _:user-283 <is_guest_user> "False" .
+            _:user-283 <restrictions> "" .
+            _:user-283 <verification_status> "DM" .
+            _:user-283 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-283 <is_collaborator> "False" .
+            _:user-283 <is_mshops_user> "False" .
+            _:user-283 <registration_date> "2012-05-29T15:57:22Z" .
+            _:user-283 <decoration_date> "2022-12-31T14:22:30Z" .
+            _:user-283 <dgraph.type> "User" .
+            _:user-283 <id> "user-283" .
+
+            _:user-287 <is_test_user> "False" .
+            _:user-287 <is_collaborator_root> "False" .
+            _:user-287 <restriction_profiles> "" .
+            _:user-287 <is_guest_user> "False" .
+            _:user-287 <restrictions> "" .
+            _:user-287 <verification_status> "NV" .
+            _:user-287 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-287 <is_collaborator> "False" .
+            _:user-287 <is_mshops_user> "False" .
+            _:user-287 <registration_date> "2006-11-10T16:00:00Z" .
+            _:user-287 <decoration_date> "2023-01-11T12:13:05Z" .
+            _:user-287 <dgraph.type> "User" .
+            _:user-287 <id> "user-287" .
+
+            _:user-298 <is_test_user> "False" .
+            _:user-298 <is_collaborator_root> "False" .
+            _:user-298 <restriction_profiles> "" .
+            _:user-298 <is_guest_user> "False" .
+            _:user-298 <restrictions> "" .
+            _:user-298 <verification_status> "NV" .
+            _:user-298 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-298 <is_collaborator> "False" .
+            _:user-298 <is_mshops_user> "False" .
+            _:user-298 <registration_date> "2009-12-23T05:19:23Z" .
+            _:user-298 <decoration_date> "2023-01-05T14:22:54Z" .
+            _:user-298 <dgraph.type> "User" .
+            _:user-298 <id> "user-298" .
+
+            _:user-300 <is_test_user> "False" .
+            _:user-300 <is_collaborator_root> "False" .
+            _:user-300 <restriction_profiles> "" .
+            _:user-300 <is_collaborator> "False" .
+            _:user-300 <is_mshops_user> "False" .
+            _:user-300 <registration_date> "2009-12-23T05:19:54Z" .
+            _:user-300 <restrictions> "" .
+            _:user-300 <verification_status> "NV" .
+            _:user-300 <decoration_date> "2022-07-28T18:16:01Z" .
+            _:user-300 <dgraph.type> "User" .
+            _:user-300 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-300 <id> "user-300" .
+
+            _:user-301 <is_test_user> "False" .
+            _:user-301 <is_collaborator_root> "False" .
+            _:user-301 <restriction_profiles> "" .
+            _:user-301 <is_guest_user> "False" .
+            _:user-301 <restrictions> "" .
+            _:user-301 <verification_status> "DM" .
+            _:user-301 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-301 <is_collaborator> "False" .
+            _:user-301 <is_mshops_user> "False" .
+            _:user-301 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-301 <decoration_date> "2022-12-06T16:42:30Z" .
+            _:user-301 <dgraph.type> "User" .
+            _:user-301 <id> "user-301" .
+
+            _:user-302 <is_test_user> "False" .
+            _:user-302 <is_collaborator_root> "False" .
+            _:user-302 <restriction_profiles> "" .
+            _:user-302 <is_collaborator> "False" .
+            _:user-302 <is_mshops_user> "False" .
+            _:user-302 <registration_date> "2012-01-11T20:46:19Z" .
+            _:user-302 <restrictions> "" .
+            _:user-302 <verification_status> "NV" .
+            _:user-302 <decoration_date> "2022-07-28T18:20:21Z" .
+            _:user-302 <dgraph.type> "User" .
+            _:user-302 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-302 <id> "user-302" .
+
+            _:user-303 <is_test_user> "False" .
+            _:user-303 <is_collaborator_root> "False" .
+            _:user-303 <restriction_profiles> "" .
+            _:user-303 <is_collaborator> "False" .
+            _:user-303 <is_mshops_user> "False" .
+            _:user-303 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-303 <restrictions> "" .
+            _:user-303 <verification_status> "DM" .
+            _:user-303 <decoration_date> "2022-07-28T18:20:24Z" .
+            _:user-303 <dgraph.type> "User" .
+            _:user-303 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-303 <id> "user-303" .
+
+            _:user-305 <is_test_user> "False" .
+            _:user-305 <is_collaborator_root> "False" .
+            _:user-305 <restriction_profiles> "" .
+            _:user-305 <is_collaborator> "False" .
+            _:user-305 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-305 <restrictions> "" .
+            _:user-305 <verification_status> "NV" .
+            _:user-305 <decoration_date> "2021-06-11T02:00:34Z" .
+            _:user-305 <dgraph.type> "User" .
+            _:user-305 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-305 <id> "user-305" .
+
+            _:user-306 <is_test_user> "False" .
+            _:user-306 <is_collaborator_root> "False" .
+            _:user-306 <restriction_profiles> "" .
+            _:user-306 <is_guest_user> "False" .
+            _:user-306 <restrictions> "" .
+            _:user-306 <verification_status> "DM" .
+            _:user-306 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-306 <is_collaborator> "False" .
+            _:user-306 <is_mshops_user> "False" .
+            _:user-306 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-306 <decoration_date> "2022-09-24T17:19:06Z" .
+            _:user-306 <dgraph.type> "User" .
+            _:user-306 <id> "user-306" .
+
+            _:user-307 <is_test_user> "False" .
+            _:user-307 <is_collaborator_root> "False" .
+            _:user-307 <restriction_profiles> "" .
+            _:user-307 <is_collaborator> "False" .
+            _:user-307 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-307 <restrictions> "" .
+            _:user-307 <verification_status> "NV" .
+            _:user-307 <decoration_date> "2022-05-02T02:08:18Z" .
+            _:user-307 <dgraph.type> "User" .
+            _:user-307 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-307 <id> "user-307" .
+
+            _:user-310 <is_test_user> "False" .
+            _:user-310 <is_collaborator_root> "False" .
+            _:user-310 <restriction_profiles> "" .
+            _:user-310 <is_guest_user> "False" .
+            _:user-310 <restrictions> "" .
+            _:user-310 <verification_status> "DM" .
+            _:user-310 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-310 <is_collaborator> "False" .
+            _:user-310 <is_mshops_user> "False" .
+            _:user-310 <registration_date> "2008-11-10T16:00:00Z" .
+            _:user-310 <decoration_date> "2022-12-06T19:02:00Z" .
+            _:user-310 <dgraph.type> "User" .
+            _:user-310 <id> "user-310" .
+
+            _:user-314 <is_test_user> "False" .
+            _:user-314 <is_collaborator_root> "False" .
+            _:user-314 <restriction_profiles> "" .
+            _:user-314 <is_guest_user> "False" .
+            _:user-314 <restrictions> "" .
+            _:user-314 <verification_status> "POI" .
+            _:user-314 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-314 <is_collaborator> "False" .
+            _:user-314 <is_mshops_user> "False" .
+            _:user-314 <registration_date> "2012-01-11T20:47:47Z" .
+            _:user-314 <current_verification_status_comment> "[agggarcia]SF 75801684 doc ok " .
+            _:user-314 <decoration_date> "2023-01-05T12:22:00Z" .
+            _:user-314 <dgraph.type> "User" .
+            _:user-314 <id> "user-314" .
+
+            _:user-316 <is_test_user> "False" .
+            _:user-316 <is_collaborator_root> "False" .
+            _:user-316 <restriction_profiles> "" .
+            _:user-316 <is_guest_user> "False" .
+            _:user-316 <restrictions> "" .
+            _:user-316 <verification_status> "DM" .
+            _:user-316 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-316 <is_collaborator> "False" .
+            _:user-316 <is_mshops_user> "False" .
+            _:user-316 <registration_date> "2012-01-11T20:48:13Z" .
+            _:user-316 <decoration_date> "2023-01-11T19:07:54Z" .
+            _:user-316 <dgraph.type> "User" .
+            _:user-316 <id> "user-316" .
+
+            _:user-317 <is_test_user> "False" .
+            _:user-317 <is_collaborator_root> "False" .
+            _:user-317 <restriction_profiles> "" .
+            _:user-317 <is_guest_user> "False" .
+            _:user-317 <restrictions> "" .
+            _:user-317 <verification_status> "DM" .
+            _:user-317 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-317 <is_collaborator> "False" .
+            _:user-317 <is_mshops_user> "False" .
+            _:user-317 <registration_date> "2012-01-11T20:48:14Z" .
+            _:user-317 <decoration_date> "2023-01-05T01:18:54Z" .
+            _:user-317 <dgraph.type> "User" .
+            _:user-317 <id> "user-317" .
+
+            _:user-318 <is_test_user> "False" .
+            _:user-318 <is_collaborator_root> "False" .
+            _:user-318 <restriction_profiles> "" .
+            _:user-318 <is_collaborator> "False" .
+            _:user-318 <registration_date> "2012-01-11T20:49:21Z" .
+            _:user-318 <restrictions> "" .
+            _:user-318 <decoration_date> "2020-11-02T12:32:02Z" .
+            _:user-318 <dgraph.type> "User" .
+            _:user-318 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-318 <id> "user-318" .
+
+            _:user-321 <is_test_user> "False" .
+            _:user-321 <is_collaborator_root> "False" .
+            _:user-321 <restriction_profiles> "PREVENCION" .
+            _:user-321 <is_guest_user> "False" .
+            _:user-321 <card_types_contagion> "" .
+            _:user-321 <restrictions> "FONDEO_DUDOSO,RET_MP" .
+            _:user-321 <verification_status> "PAUSA_IV" .
+            _:user-321 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-321 <is_collaborator> "False" .
+            _:user-321 <is_mshops_user> "False" .
+            _:user-321 <registration_date> "2012-01-11T20:47:47Z" .
+            _:user-321 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-321 <decoration_date> "2022-12-28T18:11:58Z" .
+            _:user-321 <dgraph.type> "User" .
+            _:user-321 <id> "user-321" .
+
+            _:user-322 <is_test_user> "False" .
+            _:user-322 <is_collaborator_root> "False" .
+            _:user-322 <restriction_profiles> "" .
+            _:user-322 <is_guest_user> "False" .
+            _:user-322 <restrictions> "" .
+            _:user-322 <verification_status> "DM" .
+            _:user-322 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-322 <is_collaborator> "False" .
+            _:user-322 <is_mshops_user> "False" .
+            _:user-322 <registration_date> "2012-01-11T20:47:55Z" .
+            _:user-322 <decoration_date> "2022-12-21T18:56:54Z" .
+            _:user-322 <dgraph.type> "User" .
+            _:user-322 <id> "user-322" .
+
+            _:user-326 <is_test_user> "False" .
+            _:user-326 <is_collaborator_root> "False" .
+            _:user-326 <restriction_profiles> "" .
+            _:user-326 <is_collaborator> "False" .
+            _:user-326 <registration_date> "2012-01-11T20:48:23Z" .
+            _:user-326 <restrictions> "" .
+            _:user-326 <verification_status> "DM" .
+            _:user-326 <decoration_date> "2022-03-31T18:17:47Z" .
+            _:user-326 <dgraph.type> "User" .
+            _:user-326 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-326 <id> "user-326" .
+
+            _:user-328 <is_test_user> "False" .
+            _:user-328 <is_collaborator_root> "False" .
+            _:user-328 <restriction_profiles> "" .
+            _:user-328 <is_collaborator> "False" .
+            _:user-328 <registration_date> "2012-11-28T21:50:38Z" .
+            _:user-328 <restrictions> "" .
+            _:user-328 <verification_status> "NV" .
+            _:user-328 <decoration_date> "2021-09-02T01:25:17Z" .
+            _:user-328 <dgraph.type> "User" .
+            _:user-328 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-328 <id> "user-328" .
+
+            _:user-333 <is_test_user> "False" .
+            _:user-333 <is_collaborator_root> "False" .
+            _:user-333 <restriction_profiles> "" .
+            _:user-333 <is_guest_user> "False" .
+            _:user-333 <restrictions> "" .
+            _:user-333 <verification_status> "DM" .
+            _:user-333 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-333 <is_collaborator> "False" .
+            _:user-333 <is_mshops_user> "False" .
+            _:user-333 <registration_date> "2012-01-11T20:48:49Z" .
+            _:user-333 <decoration_date> "2023-01-17T20:18:13Z" .
+            _:user-333 <dgraph.type> "User" .
+            _:user-333 <id> "user-333" .
+
+            _:user-335 <is_test_user> "False" .
+            _:user-335 <is_collaborator_root> "False" .
+            _:user-335 <restriction_profiles> "" .
+            _:user-335 <is_collaborator> "False" .
+            _:user-335 <registration_date> "2012-01-11T20:49:58Z" .
+            _:user-335 <restrictions> "" .
+            _:user-335 <verification_status> "DM" .
+            _:user-335 <decoration_date> "2022-03-31T20:54:05Z" .
+            _:user-335 <dgraph.type> "User" .
+            _:user-335 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-335 <id> "user-335" .
+
+            _:user-338 <is_test_user> "False" .
+            _:user-338 <is_collaborator_root> "False" .
+            _:user-338 <restriction_profiles> "" .
+            _:user-338 <is_collaborator> "False" .
+            _:user-338 <is_mshops_user> "False" .
+            _:user-338 <registration_date> "2012-12-17T20:35:52Z" .
+            _:user-338 <restrictions> "" .
+            _:user-338 <verification_status> "" .
+            _:user-338 <decoration_date> "2022-07-02T18:05:39Z" .
+            _:user-338 <dgraph.type> "User" .
+            _:user-338 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-338 <id> "user-338" .
+
+            _:user-339 <is_test_user> "False" .
+            _:user-339 <is_collaborator_root> "False" .
+            _:user-339 <restriction_profiles> "" .
+            _:user-339 <is_guest_user> "False" .
+            _:user-339 <restrictions> "" .
+            _:user-339 <verification_status> "DM" .
+            _:user-339 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-339 <is_collaborator> "False" .
+            _:user-339 <is_mshops_user> "False" .
+            _:user-339 <registration_date> "2015-08-11T01:38:56Z" .
+            _:user-339 <decoration_date> "2023-01-29T17:50:43Z" .
+            _:user-339 <dgraph.type> "User" .
+            _:user-339 <id> "user-339" .
+
+            _:user-340 <is_test_user> "False" .
+            _:user-340 <is_collaborator_root> "False" .
+            _:user-340 <restriction_profiles> "" .
+            _:user-340 <is_collaborator> "False" .
+            _:user-340 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-340 <restrictions> "" .
+            _:user-340 <verification_status> "DM" .
+            _:user-340 <decoration_date> "2021-09-28T15:44:27Z" .
+            _:user-340 <dgraph.type> "User" .
+            _:user-340 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-340 <id> "user-340" .
+
+            _:user-345 <is_test_user> "False" .
+            _:user-345 <is_collaborator_root> "False" .
+            _:user-345 <restriction_profiles> "" .
+            _:user-345 <is_guest_user> "False" .
+            _:user-345 <restrictions> "" .
+            _:user-345 <verification_status> "DM" .
+            _:user-345 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-345 <is_collaborator> "False" .
+            _:user-345 <is_mshops_user> "False" .
+            _:user-345 <registration_date> "2012-01-11T20:49:59Z" .
+            _:user-345 <decoration_date> "2022-09-27T13:32:52Z" .
+            _:user-345 <dgraph.type> "User" .
+            _:user-345 <id> "user-345" .
+
+            _:user-346 <is_test_user> "False" .
+            _:user-346 <is_collaborator_root> "False" .
+            _:user-346 <restriction_profiles> "" .
+            _:user-346 <is_guest_user> "False" .
+            _:user-346 <restrictions> "" .
+            _:user-346 <verification_status> "DM" .
+            _:user-346 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-346 <is_collaborator> "False" .
+            _:user-346 <is_mshops_user> "False" .
+            _:user-346 <registration_date> "2019-01-10T12:45:57Z" .
+            _:user-346 <decoration_date> "2023-01-11T12:58:58Z" .
+            _:user-346 <dgraph.type> "User" .
+            _:user-346 <id> "user-346" .
+
+            _:user-347 <is_test_user> "False" .
+            _:user-347 <is_collaborator_root> "False" .
+            _:user-347 <restriction_profiles> "" .
+            _:user-347 <is_guest_user> "False" .
+            _:user-347 <restrictions> "" .
+            _:user-347 <verification_status> "DM" .
+            _:user-347 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-347 <is_collaborator> "False" .
+            _:user-347 <is_mshops_user> "False" .
+            _:user-347 <registration_date> "2012-01-11T20:50:52Z" .
+            _:user-347 <decoration_date> "2023-01-26T13:17:31Z" .
+            _:user-347 <dgraph.type> "User" .
+            _:user-347 <id> "user-347" .
+
+            _:user-350 <is_test_user> "False" .
+            _:user-350 <is_collaborator_root> "False" .
+            _:user-350 <restriction_profiles> "" .
+            _:user-350 <is_collaborator> "False" .
+            _:user-350 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-350 <restrictions> "" .
+            _:user-350 <verification_status> "DM" .
+            _:user-350 <decoration_date> "2022-05-04T17:11:50Z" .
+            _:user-350 <dgraph.type> "User" .
+            _:user-350 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-350 <id> "user-350" .
+
+            _:user-352 <is_test_user> "False" .
+            _:user-352 <is_collaborator_root> "False" .
+            _:user-352 <restriction_profiles> "" .
+            _:user-352 <is_collaborator> "False" .
+            _:user-352 <registration_date> "2012-01-11T20:51:31Z" .
+            _:user-352 <restrictions> "" .
+            _:user-352 <verification_status> "DM" .
+            _:user-352 <decoration_date> "2022-04-01T01:50:36Z" .
+            _:user-352 <dgraph.type> "User" .
+            _:user-352 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-352 <id> "user-352" .
+
+            _:user-353 <is_test_user> "False" .
+            _:user-353 <is_collaborator_root> "False" .
+            _:user-353 <restriction_profiles> "" .
+            _:user-353 <is_guest_user> "False" .
+            _:user-353 <restrictions> "" .
+            _:user-353 <verification_status> "DM" .
+            _:user-353 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-353 <is_collaborator> "False" .
+            _:user-353 <is_mshops_user> "False" .
+            _:user-353 <registration_date> "2012-01-11T20:52:01Z" .
+            _:user-353 <decoration_date> "2023-01-25T14:07:00Z" .
+            _:user-353 <dgraph.type> "User" .
+            _:user-353 <id> "user-353" .
+
+            _:user-357 <is_test_user> "False" .
+            _:user-357 <is_collaborator_root> "False" .
+            _:user-357 <restriction_profiles> "" .
+            _:user-357 <is_guest_user> "False" .
+            _:user-357 <restrictions> "" .
+            _:user-357 <verification_status> "" .
+            _:user-357 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-357 <is_collaborator> "False" .
+            _:user-357 <is_mshops_user> "False" .
+            _:user-357 <registration_date> "2017-10-12T13:07:24Z" .
+            _:user-357 <decoration_date> "2023-01-17T13:43:59Z" .
+            _:user-357 <dgraph.type> "User" .
+            _:user-357 <id> "user-357" .
+
+            _:user-358 <is_test_user> "False" .
+            _:user-358 <is_collaborator_root> "False" .
+            _:user-358 <restriction_profiles> "" .
+            _:user-358 <is_collaborator> "False" .
+            _:user-358 <registration_date> "2012-01-11T20:53:10Z" .
+            _:user-358 <restrictions> "" .
+            _:user-358 <verification_status> "DM" .
+            _:user-358 <decoration_date> "2022-04-01T02:43:31Z" .
+            _:user-358 <dgraph.type> "User" .
+            _:user-358 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-358 <id> "user-358" .
+
+            _:user-360 <is_test_user> "False" .
+            _:user-360 <is_collaborator_root> "False" .
+            _:user-360 <restriction_profiles> "" .
+            _:user-360 <is_collaborator> "False" .
+            _:user-360 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-360 <restrictions> "" .
+            _:user-360 <verification_status> "DM" .
+            _:user-360 <decoration_date> "2022-05-04T17:11:47Z" .
+            _:user-360 <dgraph.type> "User" .
+            _:user-360 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-360 <id> "user-360" .
+
+            _:user-363 <is_test_user> "False" .
+            _:user-363 <is_collaborator_root> "False" .
+            _:user-363 <restriction_profiles> "" .
+            _:user-363 <is_guest_user> "False" .
+            _:user-363 <card_types_contagion> "" .
+            _:user-363 <restrictions> "" .
+            _:user-363 <verification_status> "PAUSA_IV" .
+            _:user-363 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-363 <is_collaborator> "False" .
+            _:user-363 <is_mshops_user> "False" .
+            _:user-363 <registration_date> "2012-01-11T20:52:28Z" .
+            _:user-363 <card_types_own> "YELLOW_AUTOREMEDY" .
+            _:user-363 <current_verification_status_comment> "[RESTRICTIONS][AUTO_OFERTAS_BUYER][AUTO_OFERTAS_BUYER][coliving-restrictions] [User Migration from Old World to New World set-2022]" .
+            _:user-363 <decoration_date> "2022-12-13T13:01:39Z" .
+            _:user-363 <dgraph.type> "User" .
+            _:user-363 <id> "user-363" .
+
+            _:user-364 <is_test_user> "False" .
+            _:user-364 <is_collaborator_root> "False" .
+            _:user-364 <restriction_profiles> "" .
+            _:user-364 <is_guest_user> "False" .
+            _:user-364 <restrictions> "" .
+            _:user-364 <verification_status> "DM" .
+            _:user-364 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-364 <is_collaborator> "False" .
+            _:user-364 <is_mshops_user> "False" .
+            _:user-364 <registration_date> "2012-01-11T20:52:45Z" .
+            _:user-364 <decoration_date> "2023-01-21T16:52:10Z" .
+            _:user-364 <dgraph.type> "User" .
+            _:user-364 <id> "user-364" .
+
+            _:user-370 <is_test_user> "False" .
+            _:user-370 <is_collaborator_root> "False" .
+            _:user-370 <restriction_profiles> "" .
+            _:user-370 <is_guest_user> "False" .
+            _:user-370 <restrictions> "" .
+            _:user-370 <verification_status> "DM" .
+            _:user-370 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-370 <is_collaborator> "False" .
+            _:user-370 <is_mshops_user> "False" .
+            _:user-370 <registration_date> "2009-06-26T20:21:53Z" .
+            _:user-370 <decoration_date> "2022-11-30T19:43:04Z" .
+            _:user-370 <dgraph.type> "User" .
+            _:user-370 <id> "user-370" .
+
+            _:user-381 <is_test_user> "False" .
+            _:user-381 <is_collaborator_root> "False" .
+            _:user-381 <restriction_profiles> "" .
+            _:user-381 <is_collaborator> "False" .
+            _:user-381 <registration_date> "2012-01-11T20:53:06Z" .
+            _:user-381 <restrictions> "" .
+            _:user-381 <verification_status> "DM" .
+            _:user-381 <decoration_date> "2022-04-01T05:57:10Z" .
+            _:user-381 <dgraph.type> "User" .
+            _:user-381 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-381 <id> "user-381" .
+
+            _:user-384 <is_test_user> "False" .
+            _:user-384 <is_collaborator_root> "False" .
+            _:user-384 <restriction_profiles> "" .
+            _:user-384 <is_collaborator> "False" .
+            _:user-384 <registration_date> "2012-01-11T20:54:29Z" .
+            _:user-384 <restrictions> "" .
+            _:user-384 <verification_status> "DM" .
+            _:user-384 <decoration_date> "2022-04-01T06:33:02Z" .
+            _:user-384 <dgraph.type> "User" .
+            _:user-384 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-384 <id> "user-384" .
+
+            _:user-389 <is_test_user> "False" .
+            _:user-389 <is_collaborator_root> "False" .
+            _:user-389 <restriction_profiles> "" .
+            _:user-389 <is_guest_user> "False" .
+            _:user-389 <restrictions> "" .
+            _:user-389 <verification_status> "DM" .
+            _:user-389 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-389 <is_collaborator> "False" .
+            _:user-389 <is_mshops_user> "False" .
+            _:user-389 <registration_date> "2012-01-11T20:54:58Z" .
+            _:user-389 <decoration_date> "2023-01-18T19:28:47Z" .
+            _:user-389 <dgraph.type> "User" .
+            _:user-389 <id> "user-389" .
+
+            _:user-393 <is_collaborator_root> "False" .
+            _:user-393 <restriction_profiles> "" .
+            _:user-393 <is_collaborator> "False" .
+            _:user-393 <restrictions> "" .
+            _:user-393 <verification_status> "DM" .
+            _:user-393 <decoration_date> "2020-03-23T19:03:11" .
+            _:user-393 <dgraph.type> "User" .
+            _:user-393 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-393 <id> "user-393" .
+
+            _:user-395 <is_test_user> "False" .
+            _:user-395 <is_collaborator_root> "False" .
+            _:user-395 <restriction_profiles> "" .
+            _:user-395 <is_guest_user> "False" .
+            _:user-395 <restrictions> "" .
+            _:user-395 <verification_status> "DM" .
+            _:user-395 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-395 <is_collaborator> "False" .
+            _:user-395 <is_mshops_user> "False" .
+            _:user-395 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-395 <decoration_date> "2022-12-20T18:30:51Z" .
+            _:user-395 <dgraph.type> "User" .
+            _:user-395 <id> "user-395" .
+
+            _:user-398 <is_test_user> "False" .
+            _:user-398 <is_collaborator_root> "False" .
+            _:user-398 <restriction_profiles> "" .
+            _:user-398 <is_collaborator> "False" .
+            _:user-398 <is_mshops_user> "False" .
+            _:user-398 <registration_date> "2011-09-05T16:00:00Z" .
+            _:user-398 <restrictions> "" .
+            _:user-398 <verification_status> "DM" .
+            _:user-398 <decoration_date> "2022-08-29T00:07:16Z" .
+            _:user-398 <dgraph.type> "User" .
+            _:user-398 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-398 <id> "user-398" .
+
+            _:user-399 <is_test_user> "False" .
+            _:user-399 <is_collaborator_root> "False" .
+            _:user-399 <restriction_profiles> "" .
+            _:user-399 <is_guest_user> "False" .
+            _:user-399 <restrictions> "" .
+            _:user-399 <verification_status> "DM" .
+            _:user-399 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-399 <is_collaborator> "False" .
+            _:user-399 <is_mshops_user> "False" .
+            _:user-399 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-399 <decoration_date> "2022-12-27T23:25:38Z" .
+            _:user-399 <dgraph.type> "User" .
+            _:user-399 <id> "user-399" .
+
+            _:user-400 <is_test_user> "False" .
+            _:user-400 <is_collaborator_root> "False" .
+            _:user-400 <restriction_profiles> "" .
+            _:user-400 <is_guest_user> "False" .
+            _:user-400 <restrictions> "" .
+            _:user-400 <verification_status> "DM" .
+            _:user-400 <current_verification_status_comment_has_tag_me> "False" .
+            _:user-400 <is_collaborator> "False" .
+            _:user-400 <is_mshops_user> "False" .
+            _:user-400 <registration_date> "2000-09-05T16:00:00Z" .
+            _:user-400 <decoration_date> "2022-10-13T16:47:13Z" .
+            _:user-400 <dgraph.type> "User" .
+            _:user-400 <id> "user-400" .
+        }
+    }"""
+    resp = requests.post(url,headers=headers, data=dataRaw)
+    
+
+def greet(ti):
+    name = ti.xcom_pull(task_ids = 'obtener_nombre', key='name')
+    print(f'hello world {name}')
+
+with DAG(
+    dag_id= 'dgraph_data_load',
+    default_args=default_args,
+    description='dgraph load data',
+    start_date=datetime(2023,6,14),
+    schedule_interval='@daily'
+) as dag:
+    task1 = PythonOperator(
+        task_id='saludo',
+        python_callable=greet
+    )
+
+    task2 = PythonOperator(
+        task_id='obtener_nombre',
+        python_callable=get_name
+    )
+
+    task2 >> task1
