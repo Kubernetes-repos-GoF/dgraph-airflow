@@ -26,16 +26,18 @@ def load_rdf_file(ti):
 
     readFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'accountRelations_1c.rdf.gz')
     ti.xcom_push(key='name', value=readFileName)
-    fp = open(readFileName)
-    for i, line in enumerate(fp):
-        if i == 3:
-            user_i = str.strip(line)
-            ti.xcom_push(key='line', value=user_i)
-            break
-    fp.close()
+    # fp = open(readFileName)
+    # for i, line in enumerate(fp):
+    #     if i == 3:
+    #         user_i = str.strip(line)
+    #         ti.xcom_push(key='line', value=user_i)
+    #         break
+    # fp.close()
 
     with open(readFileName, 'rb') as dataRaw:
+        ti.xcom_push(key='step', value="Inicial")
         resp = requests.post(url,headers=headers, data=dataRaw)
+    ti.xcom_push(key='stepX', value="Final")
     
 
 def log_print_py(ti):
