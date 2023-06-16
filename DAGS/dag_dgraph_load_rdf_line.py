@@ -26,13 +26,13 @@ def load_rdf_file(ti):
 
     readFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'accountRelations_1c.rdf.gz')
     ti.xcom_push(key='name', value=readFileName)
-    # fp = open(readFileName)
-    # for i, line in enumerate(fp):
-    #     if i == 3:
-    #         user_i = str.strip(line)
-    #         ti.xcom_push(key='line', value=user_i)
-    #         break
-    # fp.close()
+    fp = open(readFileName)
+    for i, line in enumerate(fp):
+        if i == 3:
+            user_i = str.strip(line)
+            ti.xcom_push(key='line', value=user_i)
+            break
+    fp.close()
 
     with open(readFileName, 'rb') as dataRaw:
         ti.xcom_push(key='step', value="Inicial")
@@ -49,7 +49,7 @@ with DAG(
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),
-    schedule_interval='@daily'
+    schedule_interval=None
 ) as dag:
     task1 = PythonOperator(
         task_id='print_log',
