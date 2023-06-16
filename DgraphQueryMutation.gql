@@ -1,0 +1,92 @@
+# Users by filter attribute
+{
+  qusers(func: allofterms(current_verification_status_comment, "Applying POI because")) {
+    id
+    uid
+    restriction_profiles               
+		restrictions                       
+		decoration_date                    
+		is_test_user                       
+		is_collaborator_root               
+		is_collaborator                    
+		registration_date                  
+		current_verification_status_comment
+		verification_status                
+		current_verification_status_comment_has_tag_me
+		is_mshops_user    
+  }
+}
+
+# User with Locations
+{
+  qcross(func: eq(id, "user-1232041317")) {
+    id
+    uid
+    restriction_profiles               
+    restrictions                       
+    decoration_date                    
+    is_test_user                       
+    is_collaborator_root               
+    is_collaborator                    
+    registration_date                  
+    current_verification_status_comment
+    verification_status                
+    current_verification_status_comment_has_tag_me
+    is_mshops_user
+    has_location{
+		uid
+        id
+        decoration_date
+    }
+  }
+}
+
+upsert {  
+  query {
+    locations as var (func: has(<dgraph.type>)) {
+        uid
+    }
+  }
+  mutation {
+    delete {
+      uid(locations) * * .
+    }
+  }
+}
+
+
+
+#Query OK
+
+{
+  qtest(func: eq(id, "user-463983832")) {
+    id
+    uid
+    restriction_profiles               
+    restrictions                       
+    decoration_date                    
+    is_test_user                       
+    is_collaborator_root               
+    is_collaborator                    
+    registration_date                  
+    current_verification_status_comment
+    verification_status                
+    current_verification_status_comment_has_tag_me
+    is_mshops_user
+    has_location{
+			uid
+      id
+      decoration_date
+    }
+    uses_device{
+			uid
+      id
+      decoration_date
+    }
+    uses_card{
+			uid
+      id
+      decoration_date
+    }
+  }
+}

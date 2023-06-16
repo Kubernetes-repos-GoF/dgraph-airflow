@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from airflow.operators.python import PythonOperator
 
 default_args = {
-    'owner': 'angel',
+    'owner': 'mycelium',
     'retries': 5,
     'retry_delay': timedelta(minutes=5)
 }
