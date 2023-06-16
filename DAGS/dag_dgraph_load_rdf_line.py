@@ -19,6 +19,7 @@ def load_rdf_file(ti):
     url ="http://34.170.231.213:8080/mutate?commitNow=true"
     headers={
         'Accept':'*/*',
+        'Content-Encoding':'gzip',
         'Content-Type':'application/rdf',
         'Accept-Encoding':'gzip, deflate'
     }
@@ -27,10 +28,11 @@ def load_rdf_file(ti):
     ti.xcom_push(key='name', value=readFileName)
     fp = open(readFileName)
     for i, line in enumerate(fp):
+        if i == 3:
             user_i = str.strip(line)
+            ti.xcom_push(key='line', value=user_i)
             break
     fp.close()
-
 
     with open(readFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
