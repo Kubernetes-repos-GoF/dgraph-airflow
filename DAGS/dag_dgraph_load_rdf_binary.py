@@ -16,6 +16,7 @@ default_args = {
 conf.get('core', 'DAGS_FOLDER')
 
 def load_rdf_file(ti):
+    ti.xcom_push(key='stepIni', value="OK")
     url ="http://34.170.231.213:8080/mutate?commitNow=true"
     headers={
         'Accept':'*/*',
@@ -24,31 +25,24 @@ def load_rdf_file(ti):
         'Accept-Encoding':'gzip, deflate'
     }
 
-    readFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'accountRelations_1c.rdf.gz')
-    ti.xcom_push(key='name', value=readFileName)
-    fp = open(readFileName)
-    for i, line in enumerate(fp):
-        if i == 3:
-            user_i = str.strip(line)
-            ti.xcom_push(key='line', value=user_i)
-            break
-    fp.close()
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1c.rdf.gz')
+    ti.xcom_push(key='stepName', value=dataFileName)
 
-    with open(readFileName, 'rb') as dataRaw:
-        ti.xcom_push(key='step', value="Inicial")
+    with open(dataFileName, 'rb') as dataRaw:
+        ti.xcom_push(key='stepRead', value="OK")
         resp = requests.post(url,headers=headers, data=dataRaw)
-    ti.xcom_push(key='stepX', value="Final")
-    
+        ti.xcom_push(key='stepStatusCode', value=str(resp.status_code))
+    ti.xcom_push(key='stepEnd', value="OK")
 
 def log_print_py(ti):
-    name = ti.xcom_pull(task_ids = 'load_rdf_file_1_c', key='name')
-    print(f'hello world {name}')
+    name = ti.xcom_pull(task_ids = 'load_rdf_file_1_c', key='stepName')
+    print(f'File rdf: {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file_line',
+    dag_id= 'dgraph_load_rdf_binary',
     default_args=default_args,
-    description='dgraph load data',
-    start_date=datetime(2023,6,15),
+    description='dgraph load binary data',
+    start_date=datetime(2023,6,16),
     schedule_interval=None
 ) as dag:
     task1 = PythonOperator(
