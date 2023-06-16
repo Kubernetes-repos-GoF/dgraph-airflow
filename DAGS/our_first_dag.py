@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from airflow.operators.bash import BashOperator
 
 default_args = {
-    'owner' : 'angel',
+    'owner' : 'mycelium',
     'retries': 5,
     'retry_delay': timedelta(minutes=2)
 }
@@ -19,7 +19,7 @@ with DAG(
 ) as dag:
     task1 = BashOperator(
         task_id='first_task',
-        bash_command= "echo hello Angel, this is task 1"
+        bash_command= "echo hello mycelium, this is task 1"
     )
 
     task2 = BashOperator(
