@@ -20,7 +20,7 @@ def load_rdf_file(ti):
     dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1.rdf')
 
     minBound = 1
-    maxBound = 91130
+    maxBound = 2030
 
     fp = open(dataFileName)
     queryUser = "g.V("
