@@ -17,7 +17,7 @@ def load_rdf_file(ti):
         'Content-Type':'application/rdf',
         'Accept-Encoding':'gzip, deflate'
     }
-    with open('./accountRelations_1c.rdf.gz', 'rb') as dataRaw:
+    with open('./accountRelations_1_1.rdf.gz', 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
 
