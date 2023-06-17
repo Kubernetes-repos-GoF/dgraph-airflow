@@ -19,19 +19,21 @@ def load_rdf_file(ti):
     ti.xcom_push(key='stepIni', value="OK")
     dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1.rdf')
 
-    minBound = 10
-    maxBound = 51
+    minBound = 1
+    maxBound = 91130
 
     fp = open(dataFileName)
     queryUser = "g.V("
     for i, line in enumerate(fp):
-        if i == 10:
-            ti.xcom_push(key='stepLine', value=str.strip(line))
-        
-        if i >= minBound and i < maxBound:
-            user_i = str.strip(line)
-            queryUser += f"'user-{user_i}',"
-        elif i > maxBound:
+        rdfLine = str.strip(line)
+        rdfTuples = rdfLine[1:].split(" ")
+        rdfTuples[0] = "_:"+rdfTuples[0][:-1]
+        rdfLine = " ".join(rdfTuples)
+        # if i >= minBound and i < maxBound:
+        # elif i > maxBound:
+        if i > maxBound:
+            ti.xcom_push(key='stepLineN', value=str.strip(i))
+            ti.xcom_push(key='stepLineS', value=str.strip(rdfLine))
             break
     fp.close()
     ti.xcom_push(key='stepFin', value="OK")
