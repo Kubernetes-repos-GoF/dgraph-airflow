@@ -26,7 +26,7 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file',
+    dag_id= 'dgraph_load_rdf_file_a',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),
