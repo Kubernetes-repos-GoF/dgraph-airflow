@@ -17,6 +17,7 @@ def load_rdf_file(ti):
     url ="http://34.170.231.213:8080/mutate?commitNow=true"
     headers={
         'Accept':'*/*',
+        'Content-Encoding':'gzip',
         'Content-Type':'application/rdf',
         'Accept-Encoding':'gzip, deflate'
     }
@@ -31,7 +32,7 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file_m',
+    dag_id= 'dgraph_load_rdf_file_n',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),
