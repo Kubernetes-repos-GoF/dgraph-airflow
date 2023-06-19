@@ -21,17 +21,17 @@ def load_rdf_file(ti):
         'Accept-Encoding':'gzip, deflate'
     }
 
-    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1i.rdf.gz')
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1j.rdf.gz')
     with open(dataFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
 
 def log_print_py(ti):
-    name = ti.xcom_pull(task_ids = 'load_rdf_file_1_c', key='name')
+    name = ti.xcom_pull(task_ids = 'load_rdf_gz', key='name')
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file_i',
+    dag_id= 'dgraph_load_rdf_file_j',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),
@@ -43,7 +43,7 @@ with DAG(
     )
 
     task2 = PythonOperator(
-        task_id='load_rdf_file_1_c',
+        task_id='load_rdf_gz',
         python_callable=load_rdf_file
     )
 
