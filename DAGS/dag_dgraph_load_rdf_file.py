@@ -1,7 +1,10 @@
 from airflow import DAG
-from datetime import timedelta, datetime
 from airflow.operators.python import PythonOperator
+from airflow.configuration import conf
+
+from datetime import timedelta, datetime
 import requests
+import os
 
 default_args = {
     'owner': 'mycelium',
@@ -17,7 +20,9 @@ def load_rdf_file(ti):
         'Content-Type':'application/rdf',
         'Accept-Encoding':'gzip, deflate'
     }
-    with open('./accountRelations_1_1f.rdf.gz', 'rb') as dataRaw:
+
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1f.rdf.gz')
+    with open(dataFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
 
@@ -26,7 +31,7 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file_f',
+    dag_id= 'dgraph_load_rdf_file_g',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),
