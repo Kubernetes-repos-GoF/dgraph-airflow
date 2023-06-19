@@ -22,7 +22,7 @@ def load_rdf_file(ti):
         'Accept-Encoding':'gzip, deflate'
     }
 
-    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1c.rdf.gz')
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1o.rdf.gz')
     with open(dataFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
@@ -32,7 +32,7 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file_n',
+    dag_id= 'dgraph_load_rdf_file_o',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),
