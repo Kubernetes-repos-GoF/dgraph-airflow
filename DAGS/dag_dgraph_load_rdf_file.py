@@ -22,7 +22,7 @@ def load_rdf_file_a(ti):
         'Accept-Encoding':'gzip, deflate'
     }
 
-    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1.rdf')
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1.rdf.gz')
     with open(dataFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
     
@@ -36,7 +36,7 @@ def load_rdf_file_b(ti):
         'Accept-Encoding':'gzip, deflate'
     }
 
-    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_2.rdf')
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_2.rdf.gz')
     with open(dataFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
 
