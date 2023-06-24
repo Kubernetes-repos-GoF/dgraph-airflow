@@ -12,7 +12,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-url ="http://34.170.231.213:8080/mutate?commitNow=true"
+url ="http://34.173.144.19:8080/mutate?commitNow=true"
 headers={
     'Accept':'*/*',
     'Content-Encoding':'gzip',
