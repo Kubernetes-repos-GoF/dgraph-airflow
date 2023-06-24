@@ -22,7 +22,7 @@ headers={
 
 def load_rdf_file(ti, fileid):
     global url, headers
-    fileId = "1_"+str(fileid)
+    fileId = str(fileid)
 
     fileName = "accountRelations_"+fileId+".rdf.gz"
     ti.xcom_push(key='name', value=fileName)
@@ -42,11 +42,299 @@ with DAG(
     task1 = PythonOperator(
         task_id='load_rdf_a',
         python_callable=load_rdf_file,
-        op_kwargs={'fileid': '1'}
+        op_kwargs={'fileid': '1_1'}
     )
 
     task2 = PythonOperator(
         task_id='load_rdf_b',
         python_callable=load_rdf_file,
-        op_kwargs={'fileid': '2'}
+        op_kwargs={'fileid': '1_2'}
+    )
+
+    task3 = PythonOperator(
+        task_id='load_rdf_c',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '1_3'}
+    )
+
+    task4 = PythonOperator(
+        task_id='load_rdf_d',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '1_4'}
+    )
+
+    task5 = PythonOperator(
+        task_id='load_rdf_e',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '1_5'}
+    )
+
+    task6 = PythonOperator(
+        task_id='load_rdf_f',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '1_6'}
+    )
+
+    task7 = PythonOperator(
+        task_id='load_rdf_g',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '1_7'}
+    )
+
+    task8 = PythonOperator(
+        task_id='load_rdf_h',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '10_1'}
+    )
+
+    task9 = PythonOperator(
+        task_id='load_rdf_i',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '10_2'}
+    )
+
+    task10 = PythonOperator(
+        task_id='load_rdf_j',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '10_3'}
+    )
+
+    task11 = PythonOperator(
+        task_id='load_rdf_aa',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '10_4'}
+    )
+
+    task12 = PythonOperator(
+        task_id='load_rdf_ab',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '10_5'}
+    )
+
+    task13 = PythonOperator(
+        task_id='load_rdf_ac',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '10_6'}
+    )
+
+    task14 = PythonOperator(
+        task_id='load_rdf_ad',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_1'}
+    )
+
+    task15 = PythonOperator(
+        task_id='load_rdf_ae',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_2'}
+    )
+
+    task16 = PythonOperator(
+        task_id='load_rdf_af',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_3'}
+    )
+
+    task17 = PythonOperator(
+        task_id='load_rdf_ag',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_4'}
+    )
+
+    task18 = PythonOperator(
+        task_id='load_rdf_ah',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_5'}
+    )
+
+    task19 = PythonOperator(
+        task_id='load_rdf_ai',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_6'}
+    )
+
+    task20 = PythonOperator(
+        task_id='load_rdf_aj',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '11_7'}
+    )
+
+    task21 = PythonOperator(
+        task_id='load_rdf_ba',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_1'}
+    )
+
+    task22 = PythonOperator(
+        task_id='load_rdf_bb',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_2'}
+    )
+
+    task23 = PythonOperator(
+        task_id='load_rdf_bc',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_3'}
+    )
+
+    task24 = PythonOperator(
+        task_id='load_rdf_bd',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_4'}
+    )
+
+    task25 = PythonOperator(
+        task_id='load_rdf_be',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_5'}
+    )
+
+    task26 = PythonOperator(
+        task_id='load_rdf_bf',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_6'}
+    )
+
+    task27 = PythonOperator(
+        task_id='load_rdf_bg',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '12_7'}
+    )
+
+    task28 = PythonOperator(
+        task_id='load_rdf_bh',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_1'}
+    )
+
+    task29 = PythonOperator(
+        task_id='load_rdf_bi',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_2'}
+    )
+
+    task30 = PythonOperator(
+        task_id='load_rdf_bj',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_3'}
+    )
+
+    task31 = PythonOperator(
+        task_id='load_rdf_ca',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_4'}
+    )
+
+    task32 = PythonOperator(
+        task_id='load_rdf_cb',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_5'}
+    )
+
+    task33 = PythonOperator(
+        task_id='load_rdf_cc',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_6'}
+    )
+
+    task34 = PythonOperator(
+        task_id='load_rdf_cd',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '13_7'}
+    )
+
+    task35 = PythonOperator(
+        task_id='load_rdf_ce',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '100_1'}
+    )
+
+    task36 = PythonOperator(
+        task_id='load_rdf_cf',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '100_2'}
+    )
+
+    task37 = PythonOperator(
+        task_id='load_rdf_cg',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '100_3'}
+    )
+
+    task38 = PythonOperator(
+        task_id='load_rdf_ch',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '100_4'}
+    )
+
+    task39 = PythonOperator(
+        task_id='load_rdf_ci',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '100_5'}
+    )
+
+    task40 = PythonOperator(
+        task_id='load_rdf_cj',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '100_6'}
+    )
+
+    task41 = PythonOperator(
+        task_id='load_rdf_da',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '101_1'}
+    )
+
+    task42 = PythonOperator(
+        task_id='load_rdf_db',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '101_2'}
+    )
+
+    task43 = PythonOperator(
+        task_id='load_rdf_dc',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '101_3'}
+    )
+
+    task44 = PythonOperator(
+        task_id='load_rdf_dd',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '101_4'}
+    )
+
+    task45 = PythonOperator(
+        task_id='load_rdf_de',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '101_5'}
+    )
+
+    task46 = PythonOperator(
+        task_id='load_rdf_df',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '101_6'}
+    )
+
+    task47 = PythonOperator(
+        task_id='load_rdf_dg',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '102_1'}
+    )
+
+    task48 = PythonOperator(
+        task_id='load_rdf_dh',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '102_2'}
+    )
+
+    task49 = PythonOperator(
+        task_id='load_rdf_di',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '102_3'}
+    )
+
+    task50 = PythonOperator(
+        task_id='load_rdf_dj',
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '102_4'}
     )
