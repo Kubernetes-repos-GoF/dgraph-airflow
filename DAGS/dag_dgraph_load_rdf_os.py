@@ -17,7 +17,7 @@ conf.get('core', 'DAGS_FOLDER')
 
 def load_rdf_file(ti):
     ti.xcom_push(key='name', value='Mycelium')
-    url ="http://34.170.231.213:8080/mutate?commitNow=true"
+    url ="http://34.173.144.19:8080/mutate?commitNow=true"
     headers={
         'Accept':'*/*',
         'Content-Type':'application/rdf',

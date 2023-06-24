@@ -12,7 +12,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-url ="http://34.170.231.213:8080/mutate?commitNow=true"
+url ="http://34.173.144.19:8080/mutate?commitNow=true"
 headers={
     'Accept':'*/*',
     'Content-Encoding':'gzip',
@@ -20,9 +20,9 @@ headers={
     'Accept-Encoding':'gzip, deflate'
 }
 
-def load_rdf_file(ti):
+def load_rdf_file(ti, fileid):
     global url, headers
-    fileId = "1_1"
+    fileId = "1_"+str(fileid)
 
     fileName = "accountRelations_"+fileId+".rdf.gz"
     ti.xcom_push(key='name', value=fileName)
@@ -41,10 +41,12 @@ with DAG(
 ) as dag:
     task1 = PythonOperator(
         task_id='load_rdf_a',
-        python_callable=load_rdf_file
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '1'}
     )
 
     task2 = PythonOperator(
         task_id='load_rdf_b',
-        python_callable=load_rdf_file
+        python_callable=load_rdf_file,
+        op_kwargs={'fileid': '2'}
     )
