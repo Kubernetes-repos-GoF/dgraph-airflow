@@ -20,9 +20,9 @@ headers={
     'Accept-Encoding':'gzip, deflate'
 }
 
-def load_rdf(ti, fileid):
+def load_rdf_file(ti):
     global url, headers
-    fileId = "1_"+str(fileid)
+    fileId = "1_1"
 
     fileName = "accountRelations_"+fileId+".rdf.gz"
     ti.xcom_push(key='name', value=fileName)
@@ -35,18 +35,16 @@ def load_rdf(ti, fileid):
 with DAG(
     dag_id= 'dgraph_import_rdf',
     default_args=default_args,
-    description='dgraph load data',
+    description='dgraph import rdf',
     start_date=datetime(2023,6,23),
     schedule_interval=None
 ) as dag:
     task1 = PythonOperator(
         task_id='load_rdf_a',
-        python_callable=load_rdf,
-        op_kwargs={'fileid': '1'}
+        python_callable=load_rdf_file
     )
 
     task2 = PythonOperator(
         task_id='load_rdf_b',
-        python_callable=load_rdf,
-        op_kwargs={'fileid': '2'}
+        python_callable=load_rdf_file
     )
