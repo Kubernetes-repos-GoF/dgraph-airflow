@@ -33,7 +33,7 @@ def load_rdf(ti, **kwargs):
         ti.xcom_push(key='status', value=str(resp.status_code))
         
 with DAG(
-    dag_id= 'dgraph_load_rdf',
+    dag_id= 'dgraph_import_rdf',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,23),
