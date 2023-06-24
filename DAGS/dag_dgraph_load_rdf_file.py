@@ -30,6 +30,7 @@ def load_rdf_file_a(ti):
     dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_'+fileId+'.rdf.gz')
     with open(dataFileName, 'rb') as dataRaw:
         resp = requests.post(url,headers=headers, data=dataRaw)
+        ti.xcom_push(key='status', value=str(resp.status_code))
     
 def load_rdf_file_b(ti):
     global url, headers
@@ -85,7 +86,7 @@ def log_print_py(ti):
     print(f'hello world {name}')
 
 with DAG(
-    dag_id= 'dgraph_load_rdf_file_s',
+    dag_id= 'dgraph_load_rdf_file_five',
     default_args=default_args,
     description='dgraph load data',
     start_date=datetime(2023,6,15),

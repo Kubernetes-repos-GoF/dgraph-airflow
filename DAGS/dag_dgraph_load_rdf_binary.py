@@ -25,7 +25,7 @@ def load_rdf_file(ti):
         'Accept-Encoding':'gzip, deflate'
     }
 
-    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1c.rdf.gz')
+    dataFileName = os.path.join(conf.get('core', 'DAGS_FOLDER'), 'data/accountRelations_1_1.rdf.gz')
     ti.xcom_push(key='stepName', value=dataFileName)
 
     with open(dataFileName, 'rb') as dataRaw:
