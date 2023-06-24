@@ -20,9 +20,9 @@ headers={
     'Accept-Encoding':'gzip, deflate'
 }
 
-def load_rdf(ti, **kwargs):
+def load_rdf(ti, fileid):
     global url, headers
-    fileId = "1_"+str(kwargs['fileid'])
+    fileId = "1_"+str(fileid)
 
     fileName = "accountRelations_"+fileId+".rdf.gz"
     ti.xcom_push(key='name', value=fileName)
@@ -41,14 +41,12 @@ with DAG(
 ) as dag:
     task1 = PythonOperator(
         task_id='load_rdf_a',
-        provide_context=True,
         python_callable=load_rdf,
         op_kwargs={'fileid': '1'}
     )
 
     task2 = PythonOperator(
         task_id='load_rdf_b',
-        provide_context=True,
         python_callable=load_rdf,
         op_kwargs={'fileid': '2'}
     )
