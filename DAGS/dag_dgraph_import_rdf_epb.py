@@ -36,9 +36,9 @@ def load_rdf_file(ti, fileid):
         ti.xcom_push(key='status', value=str(resp.status_code))
         
 with DAG(
-    dag_id= 'dgraph_import_rdf_queue',
+    dag_id= 'dgraph_import_rdf_ten',
     default_args=default_args,
-    description='dgraph import rdf queue',
+    description='dgraph import rdf ten parallel',
     start_date=datetime(2023,6,23),
     schedule_interval=None
 ) as dag:
