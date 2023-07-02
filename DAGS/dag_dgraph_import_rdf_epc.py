@@ -36,11 +36,11 @@ def load_rdf_file(ti, fileid):
         ti.xcom_push(key='status', value=str(resp.status_code))
         
 with DAG(
-    dag_id= 'dgraph_import_rdf_eleven',
+    dag_id= 'dgraph_import_rdf_twelve',
     default_args=default_args,
     description='dgraph import rdf ten parallel',
-    start_date=datetime(2023,7,2,2,30),
-    schedule_interval="*/5 * * * *"
+    start_date=datetime(2023,7,2,14,50),
+    schedule_interval="*/4 * * * *"
 ) as dag:
     task1 = PythonOperator(
         task_id='load_rdf_a',
