@@ -39,8 +39,8 @@ with DAG(
     dag_id= 'dgraph_import_rdf_eleven',
     default_args=default_args,
     description='dgraph import rdf ten parallel',
-    start_date=datetime(2023,7,2,1,45),
-    schedule_interval="5 * * * *"
+    start_date=datetime(2023,7,2,2,30),
+    schedule_interval="*/5 * * * *"
 ) as dag:
     task1 = PythonOperator(
         task_id='load_rdf_a',
